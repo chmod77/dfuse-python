@@ -9,6 +9,8 @@ verify_ssl = true
 websockets = "*"
 grpcio = "*"
 grpcio-tools = "*"
+requests = "*"
+requests-cache = "*"
 
 [requires]
 python_version = "3.7"
