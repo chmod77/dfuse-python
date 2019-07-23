@@ -16,7 +16,7 @@ class Dfuse:
     __DEFAULT_TIMEOUT = 30
     __TEMPDIR_CACHE = True
 
-    def __init__(self, api_key, base_url=_Dfuse__DEFAULT_BASE_URL, request_timeout=_Dfuse__DEFAULT_TIMEOUT, tempdir_cache=_Dfuse__TEMPDIR_CACHE):
+    def __init__(self, api_key: str, base_url=_Dfuse__DEFAULT_BASE_URL, request_timeout=_Dfuse__DEFAULT_TIMEOUT, tempdir_cache=_Dfuse__TEMPDIR_CACHE):
         self.api_key = api_key
         self.base_url = base_url
         self.request_timeout = request_timeout
