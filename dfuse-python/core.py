@@ -69,9 +69,19 @@ class Dfuse:
 
     (Beta) POST /v1/chain/push_transaction: Drop-in replacement for submitting a transaction to the network, but can optionally block the request until the transaction is either in a block or in an irreversible block.
 
-Other /v1/chain/...: Reverse-proxy of all standard chain requests to a well-connected node.
+    Other /v1/chain/...: Reverse-proxy of all standard chain requests to a well-connected node.
     """
 
     # WEBSOCKETS
+    """
+    type	string	required	The type of the message. See request types below.
+    data	object	required	A free-form object, specific to the type of request. See request types below.
+    req_id	string	optional	An ID to associate responses back with the request
+    start_block	number (integer)	optional	Block at which you want to start processing. It can be an absolute block number, or a negative value, meaning how many blocks from the current head block on the chain. Ex: -2500 means 2500 blocks in the past, relative to the head block. 0 means the beginning of the chain. See Never missing a beat
+    irreversible_only	boolean	optional, defaults to false	Limits output to events that happened in irreversible blocks. Only supported on get_action_traces
+    fetch	boolean	optional, defaults to false	Whether to fetch an initial snapshot of the requested entity.
+    listen	boolean	optional, defaults to false	Whether to start listening on changes to the requested entity.
+    with_progress	number (integer)	optional	Frequency of the progress of blocks processi
+    """
 
     # GRAPHQL via grpc
