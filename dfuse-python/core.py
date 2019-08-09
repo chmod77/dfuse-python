@@ -45,6 +45,20 @@ class Dfuse:
             self._session.headers.update({"Content-Type": "application/json"})
         return self._session
 
+    def get_auth_token(self):
+        """
+        Obtains a short term (24HRS) token
+
+        TODO - cache token for < 24 hrs to avoid rate limits.
+        """
+
+        r = requests.post('https://auth.dfuse.io/v1/auth/issue', json={'api_key': self.api_key}, headers = {'Content-Type':'application/json'})
+        try:
+            token = r.json().get('token')
+        except Exception as e:
+            raise Exception(f'Failed with status {r.status} and reason {r.json().get('reason')}')    
+        return token
+
     # REST
     """
     POST https://auth.dfuse.io/v1/auth/issue: Exchange a long-term API key for a short-lived (24 hours) API Authentication Token (JWT).
