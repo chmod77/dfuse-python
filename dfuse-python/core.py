@@ -62,7 +62,7 @@ class Dfuse:
         return token
 
     # REST
-    def get_block_at_timestamp(self):
+    def get_block_at_timestamp(self, time, comparator='gte'):
         '''
         (Beta) GET /v0/block_id/by_time/by_time?time=2019-03-04T10:36:14.5Z&comparator=gte: Get the block ID produced at a given time
 
@@ -76,7 +76,7 @@ class Dfuse:
         '''
         ...
 
-    def get_transaction_lifecycle(self):
+    def get_transaction_lifecycle(self, id: str):
         '''
         (Beta) GET /v0/transactions/:id: Fetching the transaction lifecycle associated with the provided path parameter :id.
 
@@ -85,6 +85,14 @@ class Dfuse:
         ...
     
 
+    def fetch_abi(self, account: str, json: boolean=True):
+        '''
+        (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
+
+        https://mainnet.eos.dfuse.io/v0/state/abi?account=eosio&json=true
+        '''
+        ...
+
 
     """
     POST https://auth.dfuse.io/v1/auth/issue: Exchange a long-term API key for a short-lived (24 hours) API Authentication Token (JWT).
@@ -92,7 +100,6 @@ class Dfuse:
     
 
 
-    (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
 
     (Beta) POST /v0/state/abi/bin_to_json: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
 
