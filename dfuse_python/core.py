@@ -106,11 +106,13 @@ class Dfuse:
     def create_connection(self, db_file=_Dfuse__DB_NAME):
         """ create a database connection to a SQLite database """
         try:
-            conn = sqlite3.connect(db_file)
+            conn = sqlite3.connect(
+                db_file, detect_types=sqlite3.PARSE_DECLTYPES)
             print(sqlite3.version)
             return conn
         except Error as e:
             print(e)
+            return None
 
     def create_table(self, conn, sql: str = _Dfuse__CREATE_TBL_SQL):
         """ create a table from the sql statement
@@ -123,20 +125,19 @@ class Dfuse:
             c.execute(sql)
         except Error as e:
             print(e)
-        finally:
-            conn.close()
+        # finally:
+        #     conn.close()
 
     def insert_token(self, conn, data):
         """
-        Create a new project into the projects table
+        Create a new token into the tokens table
         :param conn:
-        :param project:
-        :return: project id
+        :param data:
+        :return: token
         """
 
         cur = conn.cursor()
         cur.execute("INSERT INTO tokens(token,created) VALUES(?,?)", data)
-        print('Inserting')
         return cur.lastrowid
 
     def drop_entries(self, conn):
@@ -144,40 +145,45 @@ class Dfuse:
             sql = 'DELETE FROM tokens'
             cur = conn.cursor()
             cur.execute(sql)
+        return True
 
-    def save_token_to_db(self):
+    def save_token_to_db(self, data):
         conn = self.create_connection()
         if conn is not None:
             # Delete any present entry
             self.drop_entries(conn)
             self.create_table(conn)
-            self.insert_token(conn)
+            self.insert_token(conn, data)
         else:
             print(f'Failed to connect to db {self.db_name}')
+            return False
+        return True
 
     def check_token_expiry(self):
         conn = self.create_connection()
         if conn is not None:
             ...
 
-    def read_token(self, conn):
+    def read_token(self, conn) -> list:
         """
         Query all rows in the token table
         :param conn: the Connection object
-        :return:
+        :return: list of token elements
         """
 
-
         cur = conn.cursor()
+        
 
         cur.execute("SELECT * FROM tokens")
 
         rows = cur.fetchall()
+        tokens = []
         if rows:
             for row in rows:
-                print(row)
+                tokens.append(row)
         else:
-            print('Nothing in db.')
+            return None
+        return tokens
 
     def get_auth_token(self):
         """
@@ -191,11 +197,14 @@ class Dfuse:
         conn = self.create_connection()
         if conn:
             try:
-                self.read_token(conn)
+                tokens = self.read_token(conn)
+                if tokens:
+                    return tokens
             except sqlite3.OperationalError:
                 self.create_table(conn)
 
         if not self.token:
+            print('Not found.')
             r = requests.post('https://auth.dfuse.io/v1/auth/issue', json={
                 'api_key': self.api_key}, headers={'Content-Type': 'application/json'})
             try:
@@ -204,11 +213,12 @@ class Dfuse:
                 raise Exception(
                     f'Failed with status {r.status} and reason {r.json().get("reason")}')
             self.token = token
-            conn = self.create_connection()
             if conn:
                 data = (token, datetime.datetime.now())
+                print('inserting now...')
                 self.insert_token(conn, data)
-                self.read_token(conn)
+                to = self.read_token(conn)
+                print(to)
             return self.token
         return self.token
 
