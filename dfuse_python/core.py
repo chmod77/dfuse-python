@@ -35,12 +35,12 @@ class Dfuse:
 
     def __init__(
         self,
-        api_key: str = _Dfuse__API_KEY,
-        base_url: str = _Dfuse__DEFAULT_BASE_URL,
-        request_timeout: int = _Dfuse__DEFAULT_TIMEOUT,
-        tempdir_cache: bool = _Dfuse__TEMPDIR_CACHE,
+        api_key: str = __API_KEY,
+        base_url: str = __DEFAULT_BASE_URL,
+        request_timeout: int = __DEFAULT_TIMEOUT,
+        tempdir_cache: bool = __TEMPDIR_CACHE,
         block_by_time_url: str = __BLOCK_TIME_URL,
-        db_name: str = _Dfuse__DB_NAME,
+        db_name: str = __DB_NAME,
         token: str = '',
     ):
         self.api_key = api_key
@@ -103,7 +103,7 @@ class Dfuse:
             return ex
         return response
 
-    def create_connection(self, db_file=_Dfuse__DB_NAME):
+    def create_connection(self, db_file=__DB_NAME):
         """ create a database connection to a SQLite database """
         try:
             conn = sqlite3.connect(
@@ -114,7 +114,7 @@ class Dfuse:
             print(e)
             return None
 
-    def create_table(self, conn, sql: str = _Dfuse__CREATE_TBL_SQL):
+    def create_table(self, conn, sql: str = __CREATE_TBL_SQL):
         """ create a table from the sql statement
         :param conn: Connection object
         :param sql: a CREATE TABLE statement
@@ -172,7 +172,6 @@ class Dfuse:
         """
 
         cur = conn.cursor()
-        
 
         cur.execute("SELECT * FROM tokens")
 
@@ -209,7 +208,7 @@ class Dfuse:
                 'api_key': self.api_key}, headers={'Content-Type': 'application/json'})
             try:
                 token = r.json().get('token')
-            except Exception as e:
+            except Exception:
                 raise Exception(
                     f'Failed with status {r.status} and reason {r.json().get("reason")}')
             self.token = token
