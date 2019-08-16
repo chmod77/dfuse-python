@@ -12,6 +12,7 @@ import requests
 import requests_cache
 from decouple import config
 import datetime
+from .db import persist
 
 
 class Dfuse:
@@ -22,14 +23,9 @@ class Dfuse:
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __API_KEY: str = config('API_KEY')
-    __DB_NAME: str = 'dfusepy.sqlite3'
-    __CREATE_TBL_SQL = """
-                    CREATE TABLE IF NOT EXISTS tokens (token TEXT, 
-                    created TIMESTAMP)
-                    """
+ 
 
-    __INSERT_TOKEN_SQL = """ INSERT INTO tokens(token,created) VALUES(?,?) 
-                        """
+  
 
     def __init__(
         self,
@@ -38,14 +34,12 @@ class Dfuse:
         request_timeout: int = __DEFAULT_TIMEOUT,
         tempdir_cache: bool = __TEMPDIR_CACHE,
         block_by_time_url: str = __BLOCK_TIME_URL,
-        db_name: str = __DB_NAME,
         token: str = '',
     ):
         self.api_key = api_key
         self.base_url = base_url
         self.request_timeout = request_timeout
         self.cache_filename = "dfuse_python.cache"
-        self.db_name = db_name
         self.token = None
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
@@ -104,41 +98,18 @@ class Dfuse:
    
 
     def save_token_to_db(self, data):
-        conn = self.create_connection()
+        conn = persist.create_connection()
         if conn is not None:
             # Delete any present entry
-            self.drop_entries(conn)
-            self.create_table(conn)
-            self.insert_token(conn, data)
+            persist.drop_entries(conn)
+            persist.create_table(conn)
+            persist.insert_token(conn, data)
         else:
-            print(f'Failed to connect to db {self.db_name}')
+            print(f'Failed to connect to db {persist.db_name}')
             return False
         return True
 
-    def check_token_expiry(self):
-        conn = self.create_connection()
-        if conn is not None:
-            ...
-
-    def read_token(self, conn) -> list:
-        """
-        Query all rows in the token table
-        :param conn: the Connection object
-        :return: list of token elements
-        """
-
-        cur = conn.cursor()
-
-        cur.execute("SELECT * FROM tokens")
-
-        rows = cur.fetchall()
-        tokens = []
-        if rows:
-            for row in rows:
-                tokens.append(row)
-        else:
-            return None
-        return tokens
+   
 
     def get_auth_token(self):
         """
