@@ -7,12 +7,12 @@ import json
 import os
 import tempfile
 from typing import Any, Dict, Sequence
-
+import sqlite3
 import requests
 import requests_cache
 from decouple import config
 import datetime
-from .db import persist
+from db import persist
 
 
 class Dfuse:
@@ -23,9 +23,6 @@ class Dfuse:
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __API_KEY: str = config('API_KEY')
- 
-
-  
 
     def __init__(
         self,
@@ -95,8 +92,6 @@ class Dfuse:
             return ex
         return response
 
-   
-
     def save_token_to_db(self, data):
         conn = persist.create_connection()
         if conn is not None:
@@ -109,8 +104,6 @@ class Dfuse:
             return False
         return True
 
-   
-
     def get_auth_token(self):
         """
         Obtains a short term (24HRS) token
@@ -120,14 +113,18 @@ class Dfuse:
 
         """
         # Read token from db
-        conn = self.create_connection()
+        print('Initializing....')
+        conn = persist.create_connection()
         if conn:
+            print(f'Connected. {conn}')
             try:
-                tokens = self.read_token(conn)
+                tokens = persist.read_token(conn)
                 if tokens:
+                    print(f'Found tokens {tokens}')
                     return tokens
             except sqlite3.OperationalError:
-                self.create_table(conn)
+                print(f'error. creating table')
+                persist.create_table(conn)
 
         if not self.token:
             print('Not found.')
@@ -142,8 +139,8 @@ class Dfuse:
             if conn:
                 data = (token, datetime.datetime.now())
                 print('inserting now...')
-                self.insert_token(conn, data)
-                to = self.read_token(conn)
+                persist.insert_token(conn, data)
+                to = persist.read_token(conn)
                 print(to)
             return self.token
         return self.token
