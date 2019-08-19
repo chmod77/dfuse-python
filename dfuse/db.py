@@ -20,7 +20,6 @@ class DfusePersist:
         try:
             conn = sqlite3.connect(
                 db_file, detect_types=sqlite3.PARSE_DECLTYPES)
-            print(sqlite3.version)
             return conn
         except Error as e:
             print(e)
@@ -89,10 +88,8 @@ class DfusePersist:
         tokens = []
         if rows:
             for row in rows:
-                print(f'row {row}')
                 tokens.append(row)
         else:
-            print(f'No rows. {rows}')
             return None
         return tokens
 
