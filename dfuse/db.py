@@ -51,6 +51,7 @@ class DfusePersist:
 
         cur = conn.cursor()
         cur.execute("INSERT INTO tokens(token,created) VALUES(?,?)", data)
+        conn.commit()
         return cur.lastrowid
 
     def drop_entries(self, conn):
@@ -58,6 +59,7 @@ class DfusePersist:
             sql = 'DELETE FROM tokens'
             cur = conn.cursor()
             cur.execute(sql)
+            conn.commit()
         return True
 
     def check_token_expiry(self):
@@ -87,8 +89,10 @@ class DfusePersist:
         tokens = []
         if rows:
             for row in rows:
+                print(f'row {row}')
                 tokens.append(row)
         else:
+            print(f'No rows. {rows}')
             return None
         return tokens
 
