@@ -113,21 +113,16 @@ class Dfuse:
 
         """
         # Read token from db
-        print('Initializing....')
         conn = persist.create_connection()
         if conn:
-            print(f'Connected. {conn}')
             try:
                 tokens = persist.read_token(conn)
                 if tokens:
-                    print(f'Found tokens {tokens}')
                     return tokens
             except sqlite3.OperationalError:
-                print(f'error. creating table')
                 persist.create_table(conn)
 
         if not self.token:
-            print('Not found.')
             r = requests.post('https://auth.dfuse.io/v1/auth/issue', json={
                 'api_key': self.api_key}, headers={'Content-Type': 'application/json'})
             try:
@@ -138,10 +133,7 @@ class Dfuse:
             self.token = token
             if conn:
                 data = (token, datetime.datetime.now())
-                print('inserting now...')
                 persist.insert_token(conn, data)
-                to = persist.read_token(conn)
-                print(to)
             return self.token
         return self.token
 
