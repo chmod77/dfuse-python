@@ -63,16 +63,6 @@ class DfusePersist:
             conn.commit()
         return True
 
-    def check_token_expiry(self, current_time: datetime) -> bool:
-        conn = self.create_connection()
-
-        if conn is not None:
-            resp = self.read_token(conn)[0]
-            token = resp[0]
-            if datetime.timedelta(token, current_time) > 20:
-                return True
-            return False
-
     def read_token(self, conn) -> list:
         """
         Query all rows in the token table
