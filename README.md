@@ -43,7 +43,6 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Dfuse
 >>> dfuse_ = Dfuse()
->>> import datetime
 >>> dfuse_.get_transaction_lifecycle(id='1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253')
 
 {
@@ -138,9 +137,6 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     'creation_irreversible': True,
     'cancelation_irreversible': False
  }
-
-
-
 ```
 
 
