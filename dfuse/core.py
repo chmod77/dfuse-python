@@ -48,7 +48,7 @@ class Dfuse:
             if tempdir_cache
             else self.cache_filename
         )
-        self.get_auth_token()
+        self.__get_auth_token()
 
     @property
     def session(self) -> Any:
@@ -112,7 +112,7 @@ class Dfuse:
     def is_expired(self, time_, offset_):
         return (((offset_ - time_).total_seconds())//3600) > 22
 
-    def get_auth_token(self):
+    def __get_auth_token(self):
         """
         Obtains a short term (24HRS) token
 
