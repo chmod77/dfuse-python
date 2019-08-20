@@ -13,6 +13,7 @@ import requests_cache
 from decouple import config
 import datetime
 from db import persist
+from models import TransactionLifecycle
 
 
 class Dfuse:
@@ -22,6 +23,7 @@ class Dfuse:
     __TEMPDIR_CACHE: bool = True
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
+    __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
     __API_KEY: str = config('API_KEY')
 
     def __init__(
@@ -31,6 +33,7 @@ class Dfuse:
         request_timeout: int = __DEFAULT_TIMEOUT,
         tempdir_cache: bool = __TEMPDIR_CACHE,
         block_by_time_url: str = __BLOCK_TIME_URL,
+        trx_url: str = __TRX_URL,
         token: str = '',
     ):
         self.api_key = api_key
@@ -38,6 +41,8 @@ class Dfuse:
         self.request_timeout = request_timeout
         self.cache_filename = "dfuse_python.cache"
         self.token = None
+        self.block_time_url = block_by_time_url
+        self.trx_url = trx_url
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -148,9 +153,13 @@ class Dfuse:
 
     # REST
 
-    def get_block_at_timestamp(self, time, comparator='gte'):
+    def get_block_at_timestamp(self, time: datetime.datetime = datetime.datetime.now()-datetime.timedelta(1), comparator: str = 'gte'):
         '''
-        (Beta) GET /v0/block_id/by_time/by_time?time=2019-03-04T10:36:14.5Z&comparator=gte: Get the block ID produced at a given time
+        Fetches the block ID, time and block number for the given timestamp.
+
+        (Beta) GET /v0/block_id/by_time/by_time?time=2019-03-04T10:36:14.5Z&comparator=gte: Get the block ID produced at a given time.
+
+        Defaults to 1 day earlier, if no `time` is supplied, i.e `datetime.datetime.now() - datetime.timedelta(1)`.
 
         Response:
         ```
@@ -163,17 +172,38 @@ class Dfuse:
         }
         ```
         '''
-        ...
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{self.block_time_url}?time={time}&comparator={comparator}', headers=headers)
+        r.raise_for_status()
+        return r.json()
 
-    def get_transaction_lifecycle(self, id: str):
+    def get_transaction_lifecycle(self, id: str = '02bb43ae0d74a228f021f598b552ffb1f8d2de2c29a8ea16a897d643e1d62d62'):
         '''
         (Beta) GET /v0/transactions/:id: Fetching the transaction lifecycle associated with the provided path parameter :id.
 
-        https://mainnet.eos.dfuse.io/v0/transactions/1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253
-        '''
-        ...
+        Fetching the transaction lifecycle associated with the provided path parameter :id.
 
-    def fetch_abi(self, account: str, json: bool = True):
+
+        This method returns transaction information regardless of the actual lifecycle state be it deferred, executed, failed or cancelled. 
+
+        This means that deferred transactions are handled by this method, via a transaction with a delay_sec argument pushed to the chain or created by a smart contract.
+
+        https://mainnet.eos.dfuse.io/v0/transactions/1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253
+
+        '''
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+
+        r = requests.get(f'{self.trx_url}/{id}', headers=headers)
+        r.raise_for_status()
+
+        return r.json()
+
+    def fetch_abi(self, account: str, block_num: int, json: bool = True):
         '''
         (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
 
