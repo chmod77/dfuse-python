@@ -105,7 +105,7 @@ class Dfuse:
         return True
 
     def is_expired(self, time_, offset_):
-        return (((offset_ - time_).total_seconds())//3600) > 23
+        return (((offset_ - time_).total_seconds())//3600) > 22
 
     def get_auth_token(self):
         """
