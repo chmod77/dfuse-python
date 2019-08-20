@@ -104,6 +104,9 @@ class Dfuse:
             return False
         return True
 
+    def is_expired(self, time_, offset_):
+        return (((offset_ - time_).total_seconds())//3600) > 23
+
     def get_auth_token(self):
         """
         Obtains a short term (24HRS) token
@@ -118,7 +121,13 @@ class Dfuse:
             try:
                 tokens = persist.read_token(conn)
                 if tokens:
-                    return tokens
+                    created_time = tokens[0][1]
+                    leo = datetime.datetime.now()
+                    expired = self.is_expired(created_time, leo)
+                    if not expired:
+                        self.token = tokens[0][0]
+                        return self.token
+
             except sqlite3.OperationalError:
                 persist.create_table(conn)
 
