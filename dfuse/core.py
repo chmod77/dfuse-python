@@ -24,6 +24,7 @@ class Dfuse:
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
+    __ABI_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/abi'
     __API_KEY: str = config('API_KEY')
 
     def __init__(
@@ -34,6 +35,7 @@ class Dfuse:
         tempdir_cache: bool = __TEMPDIR_CACHE,
         block_by_time_url: str = __BLOCK_TIME_URL,
         trx_url: str = __TRX_URL,
+        abi_url: str = __ABI_URL,
         token: str = '',
     ):
         self.api_key = api_key
@@ -43,6 +45,7 @@ class Dfuse:
         self.token = None
         self.block_time_url = block_by_time_url
         self.trx_url = trx_url
+        self.abi_url = abi_url
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -203,21 +206,28 @@ class Dfuse:
 
         return r.json()
 
-    def fetch_abi(self, account: str, block_num: int, json: bool = True):
+    def fetch_abi(self, account: str, block_num: int = None, json: bool = True):
         '''
         (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
 
         https://mainnet.eos.dfuse.io/v0/state/abi?account=eosio&json=true
+
+        The block_num parameter determines for which block you want the given ABI. This can be anywhere in the chain’s history.
+
+        If the requested block_num is irreversible, you will get an immutable ABI. If the ABI has changed while still in a reversible chain, you will get this new ABI, but it is not guaranteed to be the view that will pass irreversibility. Inspect the returned block_num parameter of the response to understand from which longest chain the returned ABI is from.
+
+        The returned ABI is the one that was active at the block_num requested
         '''
-        ...
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{self.abi_url}?account={account}&json={json}&blok_num={block_num}', headers=headers)
+        r.raise_for_status()
+        return r.json()
 
     """
-    POST https://auth.dfuse.io/v1/auth/issue: Exchange a long-term API key for a short-lived (24 hours) API Authentication Token (JWT).
-
     
-
-
-
     (Beta) POST /v0/state/abi/bin_to_json: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
 
     (Beta) GET /v0/state/permission_links: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
