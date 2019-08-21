@@ -51,6 +51,7 @@ class DfusePersist:
         """
 
         cur = conn.cursor()
+        self.drop_entries(conn)
         cur.execute("INSERT INTO tokens(token,created) VALUES(?,?)", data)
         conn.commit()
         return cur.lastrowid
