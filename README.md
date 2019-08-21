@@ -170,21 +170,21 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 # TODO:
 
--  POST /v0/state/abi/bin_to_json: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
+-  POST ```/v0/state/abi/bin_to_json```: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
 
--  GET /v0/state/permission_links: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
+-  GET ```/v0/state/permission_links```: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
 
--  GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
+-  GET ```/v0/state/table```: Fetching snapshots of any table on the blockchain, at any block height.
 
--  GET /v0/state/table/accounts: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+-  GET ```/v0/state/table/accounts```: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
 
--  GET /v0/state/table/scopes: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
+-  GET ```/v0/state/table/scopes```: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
 
--  GET /v0/search/transactions: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
+-  GET ```/v0/search/transactions```: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
 
--  POST /v1/chain/push_transaction: Drop-in replacement for submitting a transaction to the network, but can optionally block the request until the transaction is either in a block or in an irreversible block.
+-  POST ```/v1/chain/push_transaction```: Drop-in replacement for submitting a transaction to the network, but can optionally block the request until the transaction is either in a block or in an irreversible block.
 
-- Other /v1/chain/...: Reverse-proxy of all standard chain requests to a well-connected node.
+- Other ```/v1/chain/```: Reverse-proxy of all standard chain requests to a well-connected node.
 
 - WEBSOCKETS
 
