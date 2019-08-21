@@ -138,6 +138,58 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     'cancelation_irreversible': False
  }
 ```
+#### **`GET /v0/state/abi?account={account}&json={true/false}&block_num=int`**
+- **`Description`** - Fetch the ABI for a given contract ```account```, at any ```block_num``` height.
+                    The ```block_num``` parameter determines for which block you want the given ABI. This can be anywhere in the chain’s history. 
+                    
+    If the requested ```block_num``` is irreversible, you will get an immutable ABI. If the ABI has changed while still in a reversible chain, you will get this new ABI, but it is not guaranteed to be the view that will pass irreversibility. Inspect the returned block_num parameter of the response to understand from which longest chain the returned ABI is from.
+
+    The returned ABI is the one that was active at the block_num requested
+
+- **`Types`** 
+    - ```account``` - string (required)
+    - ```json```    - bool (optional, defaults to False)
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+            
+- **`Optional parameters:`**
+    - ```json```
+    - ```block_num```
+
+
+```python
+>>> from dfuse import Dfuse
+>>> dfuse_ = Dfuse()
+>>> dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
+
+{'block_num': 57202658,
+ 'account': 'arbarotokenn',
+ 'abi': '0e656f73696f3a3a6162692f312e310009076163636f756e7400020762616c616e6365056173736574096c617374636c61696d05617373657405636c61696d0002056f776e6572046e616d6508746f6b656e73796d0673796d626f6c05636c6f73650002056f776e6572046e616d650673796d626f6c0673796d626f6c06637265617465000206697373756572046e616d650e6d6178696d756d5f737570706c790561737365740e63757272656e63795f7374617473000406737570706c790561737365740a6d61785f737570706c7905617373657406697373756572046e616d650e746f74616c6469766964656e6473056173736574056973737565000302746f046e616d65087175616e74697479056173736574046d656d6f06737472696e67046f70656e0003056f776e6572046e616d650673796d626f6c0673796d626f6c0972616d5f7061796572046e616d65067265746972650002087175616e74697479056173736574046d656d6f06737472696e67087472616e7366657200040466726f6d046e616d6502746f046e616d65087175616e74697479056173736574046d656d6f06737472696e67070000000000e94c4405636c61696d00000000000085694405636c6f73650000000000a86cd44506637265617465000000000000a531760569737375650000000000003055a5046f70656e0000000000a8ebb2ba0672657469726500000000572d3ccdcd087472616e736665720002000000384f4d1132036936340000076163636f756e740000000000904dc60369363400000e63757272656e63795f737461747300000000'
+}
+
+```
+
+# TODO:
+
+-  POST /v0/state/abi/bin_to_json: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
+
+-  GET /v0/state/permission_links: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
+
+-  GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
+
+-  GET /v0/state/table/accounts: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+
+-  GET /v0/state/table/scopes: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
+
+-  GET /v0/search/transactions: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
+
+-  POST /v1/chain/push_transaction: Drop-in replacement for submitting a transaction to the network, but can optionally block the request until the transaction is either in a block or in an irreversible block.
+
+- Other /v1/chain/...: Reverse-proxy of all standard chain requests to a well-connected node.
+
+- WEBSOCKETS
+
+- GRAPHQL
+
 
 
 ## Buy me a coffee?
