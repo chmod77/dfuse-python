@@ -48,6 +48,7 @@ class Dfuse:
         self.abi_url = f'{state_base_url}/abi'
         self.abi_2_bin_url = f'{self.abi_url}/bin_to_json'
         self.key_accounts_url = f'{state_base_url}/key_accounts'
+        self.permission_links_url = f'{state_base_url}/permission_links'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -256,28 +257,58 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_key_accounts(self):
+    def get_key_accounts(self, public_key: str, block_num: int = None):
         """
+        GET /v0/state/key_accounts
 
-        Fetches the accounts controlled by the given public key, at any block height.
+        Fetches the accounts controlled by the given `public_key`, at any block height, specified by `block_num` (Optional, defaults to `head_block_num`).
 
-        
-        Fetches snapshots of any account’s linked authorizations on the blockchain, at any block height.
+        The `block_num` parameter determines for which block height you want a list of accounts associated to the given public key. This can be anywhere in the chain’s history.
+
+        If the requested `block_num` is `irreversible`, you will get an immutable list of accounts. 
+
+        Otherwise, there are chances that the returned value moves as the chain reorganizes.
 
         NOTE: this will call a drop-in replacement for the /v1/history/get_key_accounts API endpoint from standard `nodeos`
 
         https://mainnet.eos.dfuse.io/v0/state/key_accounts?public_key=EOS7YNS1swh6QWANkzGgFrjiX8E3u8WK5CK9GMAb6EzKVNZMYhCH3"
 
         """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{self.key_accounts_url}?public_key={public_key}&block_num={block_num}',
+            headers=headers)
+        r.raise_for_status()
+        return r.json()
 
-    def get_permission_links(self):
+    def get_permission_links(self, account: str, block_num: int = None):
         """
 
-        GET /v0/state/permission_links 
+        Fetches the accounts controlled by the given public key, at any block height.
 
+        GET /v0/state/permission_links
+
+        The `block_num` parameter determines for which block you want a linked authorizations snapshot. This can be anywhere in the chain’s history.
+
+        If the requested `block_num` is irreversible, you will get an immutable snapshot. If the `block_num` is still in a reversible chain, 
+
+        you will get a full consistent snapshot, but it is not guaranteed to be the view that will pass irreversibility. 
+
+        Inspect the returned `up_to_block_id` parameter to understand from which longest chain the returned value is a snapshot of. 
+
+        https://mainnet.eos.dfuse.io/v0/state/permission_links?account=eoscanadacom&block_num=10000000
 
         """
-        ...
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{self.permission_links_url}?account={account}&block_num={block_num}', headers=headers)
+
+        r.raise_for_status()
+        return r.json()
 
     """
 
