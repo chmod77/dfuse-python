@@ -258,11 +258,13 @@ class Dfuse:
             'hex_rows': hex_rows,
             'block_num': block_num
         }
-        r = requests.post(f'{self.abi_2_bin_url}', json=data, headers=headers)
+        print(data)
+        r = requests.post(
+            'https://mainnet.eos.dfuse.io/v0/state/abi/bin_to_json', json=data, headers=headers)
         r.raise_for_status()
         return r.json()
 
-    def get_key_accounts(self, public_key: str, block_num: int = None):
+    def get_key_accounts(self, public_key: str, block_num: int = 0):
         """
         GET /v0/state/key_accounts
 
@@ -288,7 +290,7 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_permission_links(self, account: str, block_num: int = None):
+    def get_permission_links(self, account: str, block_num: int = 0):
         """
 
         Fetches the accounts controlled by the given public key, at any block height.
@@ -315,15 +317,15 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_table(self, account: str, scope: str, table: str, block_num: int = None, json: bool = True, key_type: str = 'name', with_block_num: bool = false, with_abi: bool = false):
+    def get_table(self, account: str, scope: str, table: str, block_num: int = 0, json: bool = True, key_type: str = 'name', with_block_num: bool = False, with_abi: bool = False):
         """
-        GET /v0/state/table
+        `GET /v0/state/table`
 
         Fetches the state of any table, at any block height.
 
         Valid key_type arguments could be:
 
-            `name` (default) for EOS name-encoded base32 representation of the row key
+            `name` (default) for EOS name-encoded base32 representation of the row key.
 
             `hex` for hexadecimal encoding, ex: abcdef1234567890
 
@@ -339,7 +341,7 @@ class Dfuse:
 
         If the `block_num` is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility.
 
-        Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
+        Inspect the returned `up_to_block_id` parameter to understand from which longest chain the returned value is a snapshot of.
 
         https://mainnet.eos.dfuse.io/v0/state/table?account=eosio.token&scope=b1&table=accounts&block_num=25000000&json=true
         """
@@ -347,11 +349,11 @@ class Dfuse:
             'Authorization': f'Bearer {self.token}'
         }
         r = requests.get(
-            f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&json={json}&key_type={key_type}&with_block_num={with_block_num}&with_abi={with_abi}')
+            f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&key_type={key_type}&with_block_num={with_block_num}&with_abi={with_abi}&json={json}', headers=headers)
         r.raise_for_status()
         return r.json()
 
-    def get_table_rows(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: bool = True):
+    def get_table_row(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: bool = True):
         """
         GET /v0/state/table/row
 
@@ -400,7 +402,7 @@ class Dfuse:
 
     def get_table_scopes(self, account: str, table: str, block_num: int = None):
         """
-       
+
         Fetches snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
 
         Fetches a list of scopes, for a given table on a contract account, at any block height.
