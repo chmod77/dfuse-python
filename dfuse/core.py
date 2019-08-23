@@ -50,8 +50,9 @@ class Dfuse:
         self.abi_2_bin_url = f'{self.abi_url}/bin_to_json'
         self.key_accounts_url = f'{state_base_url}/key_accounts'
         self.get_table_url = f'{state_base_url}/table'
-        self.get_table_row_url = f'{self.get_table}/row'
+        self.get_table_row_url = f'{self.get_table_url}/row'
         self.permission_links_url = f'{state_base_url}/permission_links'
+        self.table_scopes_url = f'{state_base_url}/table_scopes'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -196,7 +197,7 @@ class Dfuse:
         Fetching the transaction lifecycle associated with the provided path parameter :id.
 
 
-        This method returns transaction information regardless of the actual lifecycle state be it deferred, executed, failed or cancelled. 
+        This method returns transaction information regardless of the actual lifecycle state be it deferred, executed, failed or cancelled.
 
         This means that deferred transactions are handled by this method, via a transaction with a delay_sec argument pushed to the chain or created by a smart contract.
 
@@ -234,9 +235,9 @@ class Dfuse:
 
     def bin_to_json(self, account: str, table: str, hex_rows: list, block_num: int = None):
         """
-        POST /v0/state/abi/bin_to_json 
+        POST /v0/state/abi/bin_to_json
 
-        Decodes binary rows (in hexadecimal string) for a given table against the ABI 
+        Decodes binary rows (in hexadecimal string) for a given table against the ABI
 
         of a given contract account, at any block height.
 
@@ -268,7 +269,7 @@ class Dfuse:
 
         The `block_num` parameter determines for which block height you want a list of accounts associated to the given public key. This can be anywhere in the chain’s history.
 
-        If the requested `block_num` is `irreversible`, you will get an immutable list of accounts. 
+        If the requested `block_num` is `irreversible`, you will get an immutable list of accounts.
 
         Otherwise, there are chances that the returned value moves as the chain reorganizes.
 
@@ -295,11 +296,11 @@ class Dfuse:
 
         The `block_num` parameter determines for which block you want a linked authorizations snapshot. This can be anywhere in the chain’s history.
 
-        If the requested `block_num` is irreversible, you will get an immutable snapshot. If the `block_num` is still in a reversible chain, 
+        If the requested `block_num` is irreversible, you will get an immutable snapshot. If the `block_num` is still in a reversible chain,
 
-        you will get a full consistent snapshot, but it is not guaranteed to be the view that will pass irreversibility. 
+        you will get a full consistent snapshot, but it is not guaranteed to be the view that will pass irreversibility.
 
-        Inspect the returned `up_to_block_id` parameter to understand from which longest chain the returned value is a snapshot of. 
+        Inspect the returned `up_to_block_id` parameter to understand from which longest chain the returned value is a snapshot of.
 
         https://mainnet.eos.dfuse.io/v0/state/permission_links?account=eoscanadacom&block_num=10000000
 
@@ -327,15 +328,15 @@ class Dfuse:
 
             `hex_be` for big endian hexadecimal encoding, ex: 9078563412efcdab
 
-            `uint64` for string encoded uint64. Beware: uint64 can be very large numbers and some programming languages need special care to 
+            `uint64` for string encoded uint64. Beware: uint64 can be very large numbers and some programming languages need special care to
 
                     decode them without truncating their value. This is why they are returned as strings
 
         The `block_num` parameter determines for which block you want a table snapshot. This can be anywhere in the chain’s history.
 
-        If the requested `block_num` is irreversible, you will get an immutable snapshot. 
+        If the requested `block_num` is irreversible, you will get an immutable snapshot.
 
-        If the `block_num` is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility. 
+        If the `block_num` is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility.
 
         Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
 
@@ -357,9 +358,9 @@ class Dfuse:
 
         The block_num parameter determines for which block you want a table row snapshot. This can be anywhere in the chain’s history.
 
-        If the requested block_num is irreversible, you will get an immutable snapshot. 
+        If the requested block_num is irreversible, you will get an immutable snapshot.
 
-        If the block_num is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility. 
+        If the block_num is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility.
 
         Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
 
@@ -367,7 +368,7 @@ class Dfuse:
 
         Row is decoded only if json: true is passed. Otherwise, hexadecimal of its binary data is returned instead.
 
-        If you requested a json-decoded form but it was impossible to decode a row (ex: the ABI was not well formed at that block_num), 
+        If you requested a json-decoded form but it was impossible to decode a row (ex: the ABI was not well formed at that block_num),
 
         the hex representation would be returned along with an error field containing the decoding error.
 
@@ -396,6 +397,26 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
+    def get_table_scopes(self, account: str, table: str, block_num: int = None):
+        """
+        GET /v0/state/table/accounts
+        
+        Fetches snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+
+        Fetches a list of scopes, for a given table on a contract account, at any block height
+
+        https://mainnet.eos.dfuse.io/v0/state/table_scopes?account=eosforumdapp&table=proposal
+
+        """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{table_scopes_url}?account={account}&table={table}&block_num={block_num}', headers=headers)
+
+        r.raise_for_status()
+        r.json()
+
     def get_table_accounts(self):
         """
         GET /v0/state/table/accounts: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
@@ -406,7 +427,6 @@ class Dfuse:
         r = requests.get(f'')
 
     """
-
     (Beta) GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
 
     (Beta) 
