@@ -24,20 +24,18 @@ class Dfuse:
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
-    __ABI_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/abi'
-    __ABI_2_BIN_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/abi/bin_to_json'
+    __STATE_BASE_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/'
     __API_KEY: str = config('API_KEY')
 
     def __init__(
         self,
         api_key: str = __API_KEY,
         base_url: str = __DEFAULT_BASE_URL,
+        state_base_url: str = __STATE_BASE_URL,
         request_timeout: int = __DEFAULT_TIMEOUT,
         tempdir_cache: bool = __TEMPDIR_CACHE,
         block_by_time_url: str = __BLOCK_TIME_URL,
         trx_url: str = __TRX_URL,
-        abi_url: str = __ABI_URL,
-        abi_2_bin_url: str = __ABI_2_BIN_URL,
         token: str = '',
     ):
         self.api_key = api_key
@@ -47,8 +45,9 @@ class Dfuse:
         self.token = None
         self.block_time_url = block_by_time_url
         self.trx_url = trx_url
-        self.abi_url = abi_url
-        self.abi_2_bin_url = abi_2_bin_url
+        self.abi_url = f'{state_base_url}/abi'
+        self.abi_2_bin_url = f'{self.abi_url}/bin_to_json'
+        self.key_accounts_url = f'{state_base_url}/key_accounts'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -257,15 +256,31 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
+    def get_key_accounts(self):
+        """
+
+        Fetches the accounts controlled by the given public key, at any block height.
+
+        
+        Fetches snapshots of any account’s linked authorizations on the blockchain, at any block height.
+
+        NOTE: this will call a drop-in replacement for the /v1/history/get_key_accounts API endpoint from standard `nodeos`
+
+        https://mainnet.eos.dfuse.io/v0/state/key_accounts?public_key=EOS7YNS1swh6QWANkzGgFrjiX8E3u8WK5CK9GMAb6EzKVNZMYhCH3"
+
+        """
+
     def get_permission_links(self):
         """
+
+        GET /v0/state/permission_links 
+
+
         """
         ...
-    
-    
+
     """
 
-    (Beta) GET /v0/state/permission_links: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
 
     (Beta) GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
 
