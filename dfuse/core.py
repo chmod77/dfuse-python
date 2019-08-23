@@ -50,6 +50,7 @@ class Dfuse:
         self.abi_2_bin_url = f'{self.abi_url}/bin_to_json'
         self.key_accounts_url = f'{state_base_url}/key_accounts'
         self.get_table_url = f'{state_base_url}/table'
+        self.get_table_row_url = f'{self.get_table}/row'
         self.permission_links_url = f'{state_base_url}/permission_links'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
@@ -348,11 +349,67 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
+    def get_table_rows(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: bool = True):
+        """
+        GET /v0/state/table/row
+
+        Fetches a single row from the state of any table, at any block height.
+
+        The block_num parameter determines for which block you want a table row snapshot. This can be anywhere in the chain’s history.
+
+        If the requested block_num is irreversible, you will get an immutable snapshot. 
+
+        If the block_num is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility. 
+
+        Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
+
+        The dfuse API tracks ABI changes and will the row with the ABI in effect at the block_num requested.
+
+        Row is decoded only if json: true is passed. Otherwise, hexadecimal of its binary data is returned instead.
+
+        If you requested a json-decoded form but it was impossible to decode a row (ex: the ABI was not well formed at that block_num), 
+
+        the hex representation would be returned along with an error field containing the decoding error.
+
+        https://mainnet.eos.dfuse.io/v0/state/table/row?account=eosio.token&scope=b1&table=accounts&primary_key=EOS&key_type=symbol_code&block_num=25000000&json=true
+
+        `key_type`s:
+
+                `name` (default) for EOS name-encoded base32 representation of the row key.
+
+                `symbol` for EOS asset’s symbol representation of the row key, a symbol is always composed of a precision and symbol code in the form of 4,EOS.
+
+                `symbol_code` for EOS asset’s symbol code representation of the row key, a symbol code is always composed of solely of 1 to 7 upper case characters like EOS.
+
+                `hex` for hexadecimal encoding, ex: abcdef1234567890.
+
+                `hex_be` for big endian hexadecimal encoding, ex: 9078563412efcdab.
+
+                `uint64` for string encoded uint64. Beware: uint64 can be very large numbers and some programming languages need special care to decode them without truncating their value. This is why they are returned as strings.
+
+        """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{self.get_table_row_url}?account={account}&scope={scope}&table={table}&primary_key={primary_key}&key_type={key_type}&block_num={block_num}&json={json}', headers=headers)
+        r.raise_for_status()
+        return r.json()
+
+    def get_table_accounts(self):
+        """
+        GET /v0/state/table/accounts: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+        """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(f'')
+
     """
 
     (Beta) GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
 
-    (Beta) GET /v0/state/table/accounts: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+    (Beta) 
 
     (Beta) GET /v0/state/table/scopes: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
 
