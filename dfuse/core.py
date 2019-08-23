@@ -53,6 +53,7 @@ class Dfuse:
         self.get_table_row_url = f'{self.get_table_url}/row'
         self.permission_links_url = f'{state_base_url}/permission_links'
         self.table_scopes_url = f'{state_base_url}/table_scopes'
+        self.get_table_accounts_url = f'{state_base_url}/tables/accounts'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -399,11 +400,10 @@ class Dfuse:
 
     def get_table_scopes(self, account: str, table: str, block_num: int = None):
         """
-        GET /v0/state/table/accounts
-        
+       
         Fetches snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
 
-        Fetches a list of scopes, for a given table on a contract account, at any block height
+        Fetches a list of scopes, for a given table on a contract account, at any block height.
 
         https://mainnet.eos.dfuse.io/v0/state/table_scopes?account=eosforumdapp&table=proposal
 
@@ -415,16 +415,26 @@ class Dfuse:
             f'{table_scopes_url}?account={account}&table={table}&block_num={block_num}', headers=headers)
 
         r.raise_for_status()
-        r.json()
+        return r.json()
 
-    def get_table_accounts(self):
+    def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: bool = True):
         """
-        GET /v0/state/table/accounts: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+        GET /v0/state/tables/accounts. 
+
+        Fetches a table from a group of contract accounts, at any block height.
+
+        Most parameters are similar to the /v0/state/table request, except for the accounts parameter, which accepts a list of account separated by the pipe character (|).
+
+        https://mainnet.eos.dfuse.io/v0/state/tables/accounts?accounts=eosio.token|eosadddddddd|tokenbyeocat|ethsidechain|epraofficial|alibabapoole|hirevibeshvt|oo1122334455|irespotokens|publytoken11|parslseed123|trybenetwork|zkstokensr4u&scope=b1&table=accounts&block_num=25000000&json=true
+
         """
         headers: dict = {
             'Authorization': f'Bearer {self.token}'
         }
-        r = requests.get(f'')
+        r = requests.get(
+            f'{self.get_table_accounts_url}?accounts={accounts}&scope={scope}&table={table}&block_num={block_num}&json={json}')
+        r.raise_for_status()
+        return r.json()
 
     """
     (Beta) GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
