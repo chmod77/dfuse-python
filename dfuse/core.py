@@ -25,6 +25,7 @@ class Dfuse:
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
     __ABI_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/abi'
+    __ABI_2_BIN_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/abi/bin_to_json'
     __API_KEY: str = config('API_KEY')
 
     def __init__(
@@ -36,6 +37,7 @@ class Dfuse:
         block_by_time_url: str = __BLOCK_TIME_URL,
         trx_url: str = __TRX_URL,
         abi_url: str = __ABI_URL,
+        abi_2_bin_url: str = __ABI_2_BIN_URL,
         token: str = '',
     ):
         self.api_key = api_key
@@ -46,6 +48,7 @@ class Dfuse:
         self.block_time_url = block_by_time_url
         self.trx_url = trx_url
         self.abi_url = abi_url
+        self.abi_2_bin_url = abi_2_bin_url
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -226,9 +229,41 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    """
+    def bin_to_json(self, account: str, table: str, hex_rows: list, block_num: int = None):
+        """
+        POST /v0/state/abi/bin_to_json 
+
+        Decodes binary rows (in hexadecimal string) for a given table against the ABI 
+
+        of a given contract account, at any block height.
+
+        {
+            "account":"eosio.token",
+            "table":"accounts",
+            "block_num":2500000,
+            "hex_rows":["aa2c0b010000000004454f5300000000"]
+        }
+        """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        data = {
+            'account': account,
+            'table': table,
+            'hex_rows': hex_rows,
+            'block_num': block_num
+        }
+        r = requests.post(f'{self.abi_2_bin_url}', json=data, headers=headers)
+        r.raise_for_status()
+        return r.json()
+
+    def get_permission_links(self):
+        """
+        """
+        ...
     
-    (Beta) POST /v0/state/abi/bin_to_json: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
+    
+    """
 
     (Beta) GET /v0/state/permission_links: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
 
