@@ -5,13 +5,14 @@
 import datetime
 import json
 import os
+import sqlite3
 import tempfile
 from typing import Any, Dict, Sequence
-import sqlite3
+
 import requests
 import requests_cache
 from decouple import config
-import datetime
+
 from db import persist
 from models import TransactionLifecycle
 
@@ -48,6 +49,7 @@ class Dfuse:
         self.abi_url = f'{state_base_url}/abi'
         self.abi_2_bin_url = f'{self.abi_url}/bin_to_json'
         self.key_accounts_url = f'{state_base_url}/key_accounts'
+        self.get_table_url = f'{state_base_url}/table'
         self.permission_links_url = f'{state_base_url}/permission_links'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
@@ -310,8 +312,43 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    """
+    def get_table(self, account: str, scope: str, table: str, block_num: int = None, json: bool = True, key_type: str = 'name', with_block_num: bool = false, with_abi: bool = false):
+        """
+        GET /v0/state/table
 
+        Fetches the state of any table, at any block height.
+
+        Valid key_type arguments could be:
+
+            `name` (default) for EOS name-encoded base32 representation of the row key
+
+            `hex` for hexadecimal encoding, ex: abcdef1234567890
+
+            `hex_be` for big endian hexadecimal encoding, ex: 9078563412efcdab
+
+            `uint64` for string encoded uint64. Beware: uint64 can be very large numbers and some programming languages need special care to 
+
+                    decode them without truncating their value. This is why they are returned as strings
+
+        The `block_num` parameter determines for which block you want a table snapshot. This can be anywhere in the chain’s history.
+
+        If the requested `block_num` is irreversible, you will get an immutable snapshot. 
+
+        If the `block_num` is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility. 
+
+        Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
+
+        https://mainnet.eos.dfuse.io/v0/state/table?account=eosio.token&scope=b1&table=accounts&block_num=25000000&json=true
+        """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        r = requests.get(
+            f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&json={json}&key_type={key_type}&with_block_num={with_block_num}&with_abi={with_abi}')
+        r.raise_for_status()
+        return r.json()
+
+    """
 
     (Beta) GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
 
