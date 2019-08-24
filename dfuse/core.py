@@ -25,7 +25,7 @@ class Dfuse:
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
-    __STATE_BASE_URL: str = 'https://mainnet.eos.dfuse.io/v0/state/'
+    __STATE_BASE_URL: str = 'https://mainnet.eos.dfuse.io/v0/state'
     __API_KEY: str = config('API_KEY')
 
     def __init__(
@@ -191,7 +191,7 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_transaction_lifecycle(self, id: str = '02bb43ae0d74a228f021f598b552ffb1f8d2de2c29a8ea16a897d643e1d62d62'):
+    def get_transaction_lifecycle(self, id: str):
         '''
         (Beta) GET /v0/transactions/:id: Fetching the transaction lifecycle associated with the provided path parameter :id.
 
@@ -214,7 +214,7 @@ class Dfuse:
 
         return r.json()
 
-    def fetch_abi(self, account: str, block_num: int = None, json: bool = True):
+    def fetch_abi(self, account: str, block_num: int = None, json: str = 'true'):
         '''
         (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
 
@@ -317,7 +317,7 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_table(self, account: str, scope: str, table: str, block_num: int = 0, json: bool = True, key_type: str = 'name', with_block_num: bool = False, with_abi: bool = False):
+    def get_table(self, account: str, scope: str, table: str, block_num: int = 0, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false'):
         """
         `GET /v0/state/table`
 
@@ -349,11 +349,11 @@ class Dfuse:
             'Authorization': f'Bearer {self.token}'
         }
         r = requests.get(
-            f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&key_type={key_type}&with_block_num={with_block_num}&with_abi={with_abi}&json={json}', headers=headers)
+            f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&key_type={key_type}&json={json}&with_abi={with_abi}&with_block_num={with_block_num}', headers=headers)
         r.raise_for_status()
         return r.json()
 
-    def get_table_row(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: bool = True):
+    def get_table_row(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: str = 'true'):
         """
         GET /v0/state/table/row
 
@@ -400,7 +400,7 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_table_scopes(self, account: str, table: str, block_num: int = None):
+    def get_table_scopes(self, account: str, table: str, block_num: int = 0):
         """
 
         Fetches snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
@@ -414,12 +414,12 @@ class Dfuse:
             'Authorization': f'Bearer {self.token}'
         }
         r = requests.get(
-            f'{table_scopes_url}?account={account}&table={table}&block_num={block_num}', headers=headers)
+            f'{self.table_scopes_url}?account={account}&table={table}&block_num={block_num}', headers=headers)
 
         r.raise_for_status()
         return r.json()
 
-    def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: bool = True):
+    def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: str = 'true'):
         """
         GET /v0/state/tables/accounts. 
 
@@ -434,7 +434,7 @@ class Dfuse:
             'Authorization': f'Bearer {self.token}'
         }
         r = requests.get(
-            f'{self.get_table_accounts_url}?accounts={accounts}&scope={scope}&table={table}&block_num={block_num}&json={json}')
+            f'{self.get_table_url}', params=f'accounts={accounts}&scope={scope}&table={table}&block_num={block_num}&json={json}', headers=headers)
         r.raise_for_status()
         return r.json()
 
