@@ -14,7 +14,7 @@ import requests_cache
 from decouple import config
 
 from db import persist
-from models import TransactionLifecycle
+from .models import TransactionLifecycle
 from ws import dws
 
 
@@ -129,9 +129,6 @@ class Dfuse:
         """
         Obtains a short term (24HRS) token
 
-        TODO - cache token for < 24 hrs to avoid rate limits.
-        TODO - Check for token in db. Expired? Fetch from API. Rewrite to capture this.
-
         """
         # Read token from db
         conn = persist.create_connection()
@@ -193,7 +190,7 @@ class Dfuse:
         r.raise_for_status()
         return r.json()
 
-    def get_transaction_lifecycle(self, id: str):
+    def get_transaction_lifecycle(self, id: str) -> TransactionLifecycle:
         '''
         (Beta) GET /v0/transactions/:id: Fetching the transaction lifecycle associated with the provided path parameter :id.
 
@@ -459,7 +456,7 @@ class Dfuse:
 
     # WEBSOCKETS
     def listen_websocket(self, data: dict, request_id: str, request_type: str, type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0):
-        dws.run(data, request_id, request_type, type, listen, irreversible_only, fetch, with_progress)
-
+        dws.run(data, request_id, request_type, type, listen,
+                irreversible_only, fetch, with_progress)
 
     # GRAPHQL via grpc
