@@ -15,6 +15,7 @@ from decouple import config
 
 from db import persist
 from models import TransactionLifecycle
+from ws import dws
 
 
 class Dfuse:
@@ -23,6 +24,7 @@ class Dfuse:
     __DEFAULT_TIMEOUT: int = 30
     __TEMPDIR_CACHE: bool = True
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
+
     __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
     __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
     __STATE_BASE_URL: str = 'https://mainnet.eos.dfuse.io/v0/state'
@@ -421,7 +423,7 @@ class Dfuse:
 
     def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: str = 'true'):
         """
-        GET /v0/state/tables/accounts. 
+        GET /v0/state/tables/accounts.
 
         Fetches a table from a group of contract accounts, at any block height.
 
@@ -433,18 +435,21 @@ class Dfuse:
         headers: dict = {
             'Authorization': f'Bearer {self.token}'
         }
+        params = {'accounts': accounts,
+                  'scope': scope,
+                  'table': table,
+                  'block_num': block_num,
+                  'json': json
+                  }
+        payload_str = "&".join("%s=%s" % (k, v) for k, v in params.items())
+
         r = requests.get(
-            f'{self.get_table_url}', params=f'accounts={accounts}&scope={scope}&table={table}&block_num={block_num}&json={json}', headers=headers)
+            f'{self.get_table_url}', params=payload_str, headers=headers)
         r.raise_for_status()
         return r.json()
 
     """
-    (Beta) GET /v0/state/table: Fetching snapshots of any table on the blockchain, at any block height.
-
-    (Beta) 
-
-    (Beta) GET /v0/state/table/scopes: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
-
+    
     (Beta) GET /v0/search/transactions: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
 
     (Beta) POST /v1/chain/push_transaction: Drop-in replacement for submitting a transaction to the network, but can optionally block the request until the transaction is either in a block or in an irreversible block.
@@ -453,15 +458,8 @@ class Dfuse:
     """
 
     # WEBSOCKETS
-    """
-    type	string	required	The type of the message. See request types below.
-    data	object	required	A free-form object, specific to the type of request. See request types below.
-    req_id	string	optional	An ID to associate responses back with the request
-    start_block	number (integer)	optional	Block at which you want to start processing. It can be an absolute block number, or a negative value, meaning how many blocks from the current head block on the chain. Ex: -2500 means 2500 blocks in the past, relative to the head block. 0 means the beginning of the chain. See Never missing a beat
-    irreversible_only	boolean	optional, defaults to false	Limits output to events that happened in irreversible blocks. Only supported on get_action_traces
-    fetch	boolean	optional, defaults to false	Whether to fetch an initial snapshot of the requested entity.
-    listen	boolean	optional, defaults to false	Whether to start listening on changes to the requested entity.
-    with_progress	number (integer)	optional	Frequency of the progress of blocks processi
-    """
+    def listen_websocket(self, data: dict, request_id: str, request_type: str, type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0):
+        dws.run(data, request_id, request_type, type, listen, irreversible_only, fetch, with_progress)
+
 
     # GRAPHQL via grpc
