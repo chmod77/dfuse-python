@@ -14,7 +14,7 @@ import requests_cache
 from decouple import config
 
 from db import persist
-from .models import TransactionLifecycle
+from models import TransactionLifecycle
 from ws import dws
 
 
@@ -210,8 +210,8 @@ class Dfuse:
 
         r = requests.get(f'{self.trx_url}/{id}', headers=headers)
         r.raise_for_status()
-
-        return r.json()
+        t = TransactionLifecycle(**r.json())
+        return t
 
     def fetch_abi(self, account: str, block_num: int = None, json: str = 'true'):
         '''
