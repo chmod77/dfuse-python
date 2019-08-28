@@ -362,7 +362,8 @@ class Dfuse:
         r = requests.get(
             f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&key_type={key_type}&json={json}&with_abi={with_abi}&with_block_num={with_block_num}', headers=headers)
         r.raise_for_status()
-        return r.json()
+        response = StateType(**r.json())
+        return response
 
     def get_table_row(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: str = 'true'):
         """
