@@ -171,7 +171,7 @@ class Dfuse:
 
     # REST
 
-    def get_block_at_timestamp(self, time: datetime.datetime = datetime.datetime.now()-datetime.timedelta(1), comparator: str = 'gte'):
+    def get_block_at_timestamp(self, time: datetime.datetime = datetime.datetime.now()-datetime.timedelta(1), comparator: str = 'gte') -> BlockTimeStampType:
         '''
         Fetches the block ID, time and block number for the given timestamp.
 
@@ -222,7 +222,7 @@ class Dfuse:
         lifecycle = TransactionLifecycle(**r.json())
         return lifecycle
 
-    def fetch_abi(self, account: str, block_num: int = None, json: str = 'true'):
+    def fetch_abi(self, account: str, block_num: int = None, json: str = 'true') -> ABIType:
         '''
         (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
 
@@ -243,7 +243,7 @@ class Dfuse:
         response = ABIType(**r.json())
         return response
 
-    def bin_to_json(self, account: str, table: str, hex_rows: list, block_num: int = None):
+    def bin_to_json(self, account: str, table: str, hex_rows: list, block_num: int = None) -> Bin2JSONType:
         """
         POST /v0/state/abi/bin_to_json
 
@@ -273,7 +273,7 @@ class Dfuse:
         response = Bin2JSONType(**r.json())
         return response
 
-    def get_key_accounts(self, public_key: str, block_num: int = 0):
+    def get_key_accounts(self, public_key: str, block_num: int = 0) -> KeyAccountsType:
         """
         GET /v0/state/key_accounts
 
@@ -300,7 +300,7 @@ class Dfuse:
         response = KeyAccountsType(**r.json())
         return response
 
-    def get_permission_links(self, account: str, block_num: int = 0):
+    def get_permission_links(self, account: str, block_num: int = 0) -> PermissionLinkType:
         """
 
         Fetches the accounts controlled by the given public key, at any block height.
