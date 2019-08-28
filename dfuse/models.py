@@ -206,3 +206,17 @@ class PermissionLinkType:
         self.last_irreversible_block_num = kwargs.get(
             'last_irreversible_block_num')
         self.linked_permissions = kwargs.get('linked_permissions')
+
+
+class StateType:
+    def __init__(self, **kwargs):
+        self.data = kwargs
+        self.up_to_block_id = kwargs.get('up_to_block_id')
+        self.up_to_block_num = kwargs.get('up_to_block_num	')
+        self.last_irreversible_block_id = kwargs.get(
+            'last_irreversible_block_id')
+        self.last_irreversible_block_num = kwargs.get(
+            'last_irreversible_block_num')
+        self.abi = kwargs.get('abi')
+        self.rows = kwargs.get('rows')
+        
