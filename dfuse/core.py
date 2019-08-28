@@ -14,8 +14,9 @@ import requests_cache
 from decouple import config
 
 from db import persist
-from models import TransactionLifecycle
 from ws import dws
+
+from models import AuthTokenResponse, TransactionLifecycle, BlockTimeStampResponse
 
 
 class Dfuse:
@@ -149,14 +150,21 @@ class Dfuse:
         if not self.token:
             r = requests.post('https://auth.dfuse.io/v1/auth/issue', json={
                 'api_key': self.api_key}, headers={'Content-Type': 'application/json'})
+            r.raise_for_status()
             try:
-                token = r.json().get('token')
+                """
+                {
+                    "token": "eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9....",
+                    "expires_at": 1550692172
+                }
+                """
+                token_ = AuthTokenResponse(**r.json())
             except Exception:
                 raise Exception(
                     f'Failed with status {r.status} and reason {r.json().get("reason")}')
-            self.token = token
+            self.token = token_.token
             if conn:
-                data = (token, datetime.datetime.now())
+                data = (token_.token, datetime.datetime.now())
                 persist.insert_token(conn, data)
             return self.token
         return self.token
@@ -188,7 +196,8 @@ class Dfuse:
         r = requests.get(
             f'{self.block_time_url}?time={time}&comparator={comparator}', headers=headers)
         r.raise_for_status()
-        return r.json()
+        response = BlockTimeStampResponse(**r.json())
+        return response
 
     def get_transaction_lifecycle(self, id: str) -> TransactionLifecycle:
         '''
