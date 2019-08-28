@@ -608,6 +608,15 @@ class AuthTokenResponse:
         self.expires_at = expires_at
 
 
+class BlockTimeStampResponse:
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
+
+
+class BlockHeader:
+    ...
+
+
 class DTrxOp:
     ...
 
@@ -625,6 +634,10 @@ class ExtDTrxop:
 
 
 class TableOp:
+    ...
+
+
+class DBOp:
     ...
 
 
@@ -663,16 +676,116 @@ class TableSnapshotResponse:
         self.data = TableRows(data)
 
 
-class BlockHeader:
-    ...
-
-
 class Transaction:
-    ...
+    def __init__(self, expiration, ref_block_num,
+                 ref_block_prefix, max_net_usage_words=0,
+                 max_cpu_usage_ms=0, delay_sec=0, context_free_actions=[],
+                 actions=[], transaction_extensions=[], signatures=[], context_free_data=[]):
+        """
+        {
+            'expiration': '2019-04-16T14:36:11',
+            'ref_block_num': 65222,
+            'ref_block_prefix': 943310534,
+            'max_net_usage_words': 0,
+            'max_cpu_usage_ms': 0,
+            'delay_sec': 0,
+            'context_free_actions': [],
+            'actions': [{'account': 'maouehmaoueh',
+                'name': 'cfainline',
+                'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
+                'hex_data': '03313233'}],
+            'transaction_extensions': [],
+            'signatures': ['SIG_K1_Jyv32XzrAGQepnk7p3YwXbRyNcp6Cztt8peR41GjfJ5hjDhjNfyf4ViubcShaDGd1BB9NEKGRrGjsQadzvwKrp7Wkjx9kh'],
+            'context_free_data': []
+            }
+        """
+        self.expiration = expiration
+        self.ref_block_num = ref_block_num
+        self.ref_block_prefix = ref_block_prefix
+        self.max_net_usage_words = max_net_usage_words
+        self.max_cpu_usage_ms = max_cpu_usage_ms
+        self.delay_sec = delay_sec
+        self.context_free_actions = context_free_actions
+        self.actions = actions
+        self.transaction_extensions = transaction_extensions
+        self.signatures = signatures
+        self.context_free_data = context_free_data
 
 
 class TransactionTrace:
-    ...
+    def __init__(self, id, block_num, block_time, producer_block_id, receipt, elapsed, net_usage, scheduled=False, action_traces=[], failed_dtrx_trace=None, **kwargs):
+        """
+        {
+            'id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+            'block_num': 53280461,
+            'block_time': '2019-04-16T14:35:41.5',
+            'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
+            'receipt': {
+                'status': 'executed',
+                'cpu_usage_us': 1191,
+                'net_usage_words': 12
+            },
+            'elapsed': 71934,
+            'net_usage': 96,
+            'scheduled': False,
+            'action_traces': [{'receipt': {'receiver': 'maouehmaoueh',
+                'act_digest': '5a2ffd1d0376049b5fcaa7d5f122723973c8fea40de9aba059bc439b4f77fd5e',
+                'global_sequence': '6249291689',
+                'auth_sequence': [['maouehmaoueh', 13]],
+                'recv_sequence': 5,
+                'code_sequence': 2,
+                'abi_sequence': 1},
+                'act': {'account': 'maouehmaoueh',
+                'name': 'cfainline',
+                'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
+                'data': {'data': '123'},
+                'hex_data': '03313233'},
+                'context_free': False,
+                'elapsed': 71857,
+                'console': '',
+                'trx_id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+                'block_num': 53280461,
+                'block_time': '2019-04-16T14:35:41.5',
+                'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
+                'account_ram_deltas': None,
+                'except': None,
+                'inline_traces': [{'receipt': {'receiver': 'dfuseiohooks',
+                'act_digest': '469d68d4e68c0adc6fd302ca60b4d27256400965b90baf7a5736c9e0ed0b3d0f',
+                'global_sequence': '6249291690',
+                'auth_sequence': [],
+                'recv_sequence': 2,
+                'code_sequence': 0,
+                'abi_sequence': 1},
+                'act': {'account': 'dfuseiohooks',
+                'name': 'event',
+                'data': {'data': 'testing=123', 'key': ''},
+                'hex_data': '000b74657374696e673d313233'},
+                'context_free': True,
+                'elapsed': 11,
+                'console': '',
+                'trx_id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+                'block_num': 53280461,
+                'block_time': '2019-04-16T14:35:41.5',
+                'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
+                'account_ram_deltas': None,
+                'except': None,
+                'inline_traces': None}]}],
+            'failed_dtrx_trace': None,
+            'except': None
+            }
+        """
+        self.id = id
+        self.block_num = block_num
+        self.block_time = block_time
+        self.producer_block_id = producer_block_id
+        self.receipt = receipt
+        self.elapsed = elapsed
+        self.net_usage = net_usage
+        self.scheduled = scheduled
+        self.action_traces = action_traces
+        self.failed_dtrx_trace = failed_dtrx_trace
+        self.except_ = kwargs.get('except')
+
 
 
 class TransactionLifecycle:
@@ -770,27 +883,28 @@ class TransactionLifecycle:
         'cancelation_irreversible': False
     }
     """
-    # def __init__(self, id: str,
-    #              transaction_status: str, transaction: Transaction,
-    #              exectution_trace: TransactionTrace = None, exectution_block_header: BlockHeader = None,
-    #              creation_tree: CreationTree = None, drtxops: List[DTrxOp] = None,
-    #              ramops: List[RAMOp] = None, tableops: List[TableOp] = None,
-    #              pub_keys: List[str] = None, created_by: ExtDTrxop = None, cancelled_by: ExtDTrxop = None, execution_irreversible: bool = None,
-    #              creation_irreversible: bool = None, cancellation_irreversible: bool = None):
-    #     self.transaction_status = transaction_status
-    #     self.transaction = Transaction(transaction)
-    #     self.exectution_trace = exectution_trace
-    #     self.exectution_block_header = exectution_block_header
-    #     self.creation_tree = creation_tree
-    #     self.drtxops = drtxops
-    #     self.ramops = ramops
-    #     self.tableops = tableops
-    #     self.pub_keys = pub_keys
-    #     self.created_by = created_by
-    #     self.cancelled_by = cancelled_by
-    #     self.execution_irreversible = execution_irreversible
-    #     self.creation_irreversible = creation_irreversible
-    #     self.cancellation_irreversible = cancellation_irreversible
 
-    def __init__(self, *args, **kwargs):
-        ...
+    def __init__(self, id: str,
+                 transaction_status: str, transaction: Transaction,
+                 execution_trace: TransactionTrace, execution_block_header: BlockHeader = None,
+                 creation_tree: CreationTree = None, dtrxops: List[DTrxOp] = None, dbops: List[DBOp] = None,
+                 ramops: List[RAMOp] = None, tableops: List[TableOp] = None,
+                 pub_keys: List[str] = None, created_by: ExtDTrxop = None, canceled_by: ExtDTrxop = None,
+                 execution_irreversible: bool = None,
+                 creation_irreversible: bool = None, cancelation_irreversible: bool = None):
+
+        self.id = id
+        self.transaction_status = transaction_status
+        self.transaction = Transaction(**transaction)
+        self.execution_trace = TransactionTrace(**execution_trace)
+        self.execution_block_header = execution_block_header
+        self.creation_tree = creation_tree
+        self.dtrxops = dtrxops
+        self.ramops = ramops
+        self.tableops = tableops
+        self.pub_keys = pub_keys
+        self.created_by = created_by
+        self.canceled_by = canceled_by
+        self.execution_irreversible = execution_irreversible
+        self.creation_irreversible = creation_irreversible
+        self.cancelation_irreversible = cancelation_irreversible
