@@ -14,9 +14,9 @@ import requests_cache
 from decouple import config
 
 from db import persist
+from models import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
+                    KeyAccountsType, PermissionLinkType, TransactionLifecycle)
 from ws import dws
-
-from models import AuthTokenResponse, TransactionLifecycle, BlockTimeStampResponse
 
 
 class Dfuse:
@@ -158,7 +158,7 @@ class Dfuse:
                     "expires_at": 1550692172
                 }
                 """
-                token_ = AuthTokenResponse(**r.json())
+                token_ = AuthTokenType(**r.json())
             except Exception:
                 raise Exception(
                     f'Failed with status {r.status} and reason {r.json().get("reason")}')
@@ -196,7 +196,7 @@ class Dfuse:
         r = requests.get(
             f'{self.block_time_url}?time={time}&comparator={comparator}', headers=headers)
         r.raise_for_status()
-        response = BlockTimeStampResponse(**r.json())
+        response = BlockTimeStampType(**r.json())
         return response
 
     def get_transaction_lifecycle(self, id: str) -> TransactionLifecycle:
@@ -219,8 +219,8 @@ class Dfuse:
 
         r = requests.get(f'{self.trx_url}/{id}', headers=headers)
         r.raise_for_status()
-        t = TransactionLifecycle(**r.json())
-        return t
+        lifecycle = TransactionLifecycle(**r.json())
+        return lifecycle
 
     def fetch_abi(self, account: str, block_num: int = None, json: str = 'true'):
         '''
@@ -240,7 +240,8 @@ class Dfuse:
         r = requests.get(
             f'{self.abi_url}?account={account}&json={json}&blok_num={block_num}', headers=headers)
         r.raise_for_status()
-        return r.json()
+        response = ABIType(**r.json())
+        return response
 
     def bin_to_json(self, account: str, table: str, hex_rows: list, block_num: int = None):
         """
@@ -266,11 +267,11 @@ class Dfuse:
             'hex_rows': hex_rows,
             'block_num': block_num
         }
-        print(data)
         r = requests.post(
             'https://mainnet.eos.dfuse.io/v0/state/abi/bin_to_json', json=data, headers=headers)
         r.raise_for_status()
-        return r.json()
+        response = Bin2JSONType(**r.json())
+        return response
 
     def get_key_accounts(self, public_key: str, block_num: int = 0):
         """
@@ -296,7 +297,8 @@ class Dfuse:
             f'{self.key_accounts_url}?public_key={public_key}&block_num={block_num}',
             headers=headers)
         r.raise_for_status()
-        return r.json()
+        response = KeyAccountsType(**r.json())
+        return response
 
     def get_permission_links(self, account: str, block_num: int = 0):
         """
@@ -323,7 +325,8 @@ class Dfuse:
             f'{self.permission_links_url}?account={account}&block_num={block_num}', headers=headers)
 
         r.raise_for_status()
-        return r.json()
+        response = PermissionLinkType(**r.json())
+        return response
 
     def get_table(self, account: str, scope: str, table: str, block_num: int = 0, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false'):
         """
