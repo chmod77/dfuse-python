@@ -61,7 +61,7 @@ class AuthTokenType:
         expires_at	timestamp	An UNIX timestamp (UTC) indicating when the JWT will expire.
     """
 
-    def __init__(self, token: str, expires_at: datetime.datetime):
+    def __init__(self, token: str, expires_at: datetime.datetime, **kwargs):
         self.token = token
         self.expires_at = expires_at
 
@@ -72,42 +72,49 @@ class BlockTimeStampType:
 
 
 class BlockHeader:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class DTrxOp:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class RAMOp:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class CreationTree:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class ExtDTrxop:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class TableOp:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class DBOp:
-    ...
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
 
 
 class TableRows:
-    def __init__(self, account, scope, rows):
+    def __init__(self, account, scope, rows, **kwargs):
         self.account = account
         self.scope = scope
         self.rows = rows
 
 
 class TableSnapshotType:
-    def __init__(self, type_: str, data: TableRows):
+    def __init__(self, type_: str, data: TableRows, **kwargs):
         self.type = type_
         self.data = TableRows(**data)
 
@@ -116,7 +123,7 @@ class Transaction:
     def __init__(self, expiration, ref_block_num,
                  ref_block_prefix, max_net_usage_words=0,
                  max_cpu_usage_ms=0, delay_sec=0, context_free_actions=[],
-                 actions=[], transaction_extensions=[], signatures=[], context_free_data=[]):
+                 actions=[], transaction_extensions=[], signatures=[], context_free_data=[], **kwargs):
         self.expiration = expiration
         self.ref_block_num = ref_block_num
         self.ref_block_prefix = ref_block_prefix
@@ -153,7 +160,7 @@ class TransactionLifecycle:
                  ramops: List[RAMOp] = None, tableops: List[TableOp] = None,
                  pub_keys: List[str] = None, created_by: ExtDTrxop = None, canceled_by: ExtDTrxop = None,
                  execution_irreversible: bool = None,
-                 creation_irreversible: bool = None, cancelation_irreversible: bool = None):
+                 creation_irreversible: bool = None, cancelation_irreversible: bool = None, **kwargs):
 
         self.id = id
         self.transaction_status = transaction_status
@@ -219,4 +226,41 @@ class StateType:
             'last_irreversible_block_num')
         self.abi = kwargs.get('abi')
         self.rows = kwargs.get('rows')
-        
+
+
+class StateTableRowType:
+    def __init__(self, *args, **kwargs):
+        self.data = kwargs
+        self.last_irreversible_block_id = kwargs.get(
+            'last_irreversible_block_id')
+        self.last_irreversible_block_num = kwargs.get(
+            'last_irreversible_block_num')
+        self.row = kwargs.get('row')
+
+
+class TableScopeType:
+    def __init__(self, **kwargs):
+        self.data = kwargs
+        self.block_num = kwargs.get('block_num')
+        self.scopes = kwargs.get('scopes')
+
+
+class MultiStateType:
+    def __init__(self, **kwargs):
+        self.data = kwargs
+        self.up_to_block_id = kwargs.get('up_to_block_id')
+        self.up_to_block_num = kwargs.get('up_to_block_num')
+        self.last_irreversible_block_id = kwargs.get(
+            'last_irreversible_block_id')
+        self.last_irreversible_block_num = kwargs.get(
+            'last_irreversible_block_num')
+        self.abi = kwargs.get('abi')
+        self.tables = kwargs.get('tables')
+
+
+class DfuseError:
+    def __init__(self, **kwargs):
+        self.data = kwargs
+        self.code = kwargs.get('code')
+        self.trace_id = kwargs.get('trace_id')
+        self.message = kwargs.get('message')
