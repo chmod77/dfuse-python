@@ -15,7 +15,8 @@ from decouple import config
 
 from db import persist
 from models import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
-                    KeyAccountsType, PermissionLinkType, TransactionLifecycle)
+                    DfuseError, KeyAccountsType, PermissionLinkType,
+                    TransactionLifecycle, StateTableRowType, TableScopeType, MultiStateType)
 from ws import dws
 
 
@@ -123,7 +124,7 @@ class Dfuse:
             return False
         return True
 
-    def is_expired(self, time_, offset_):
+    def is_expired(self, time_, offset_) -> bool:
         return (((offset_ - time_).total_seconds())//3600) > 22
 
     def __get_auth_token(self):
@@ -195,8 +196,10 @@ class Dfuse:
         }
         r = requests.get(
             f'{self.block_time_url}?time={time}&comparator={comparator}', headers=headers)
-        r.raise_for_status()
-        response = BlockTimeStampType(**r.json())
+        if r.status_code == requests.codes.ok:
+            response = BlockTimeStampType(**r.json())
+        else:
+            response = DfuseError(**r.json())
         return response
 
     def get_transaction_lifecycle(self, id: str) -> TransactionLifecycle:
@@ -218,9 +221,11 @@ class Dfuse:
         }
 
         r = requests.get(f'{self.trx_url}/{id}', headers=headers)
-        r.raise_for_status()
-        lifecycle = TransactionLifecycle(**r.json())
-        return lifecycle
+        if r.status_code == requests.codes.ok:
+            response = TransactionLifecycle(**r.json())
+        else:
+            response = DfuseError(**r.json())
+        return response
 
     def fetch_abi(self, account: str, block_num: int = None, json: str = 'true') -> ABIType:
         '''
@@ -239,8 +244,10 @@ class Dfuse:
         }
         r = requests.get(
             f'{self.abi_url}?account={account}&json={json}&blok_num={block_num}', headers=headers)
-        r.raise_for_status()
-        response = ABIType(**r.json())
+        if r.status_code == requests.codes.ok:
+            response = ABIType(**r.json())
+        else:
+            response = DfuseError(**r.json())
         return response
 
     def bin_to_json(self, account: str, table: str, hex_rows: list, block_num: int = None) -> Bin2JSONType:
@@ -269,8 +276,10 @@ class Dfuse:
         }
         r = requests.post(
             'https://mainnet.eos.dfuse.io/v0/state/abi/bin_to_json', json=data, headers=headers)
-        r.raise_for_status()
-        response = Bin2JSONType(**r.json())
+        if r.status_code == requests.codes.ok:
+            response = Bin2JSONType(**r.json())
+        else:
+            response = DfuseError(**r.json())
         return response
 
     def get_key_accounts(self, public_key: str, block_num: int = 0) -> KeyAccountsType:
@@ -296,8 +305,10 @@ class Dfuse:
         r = requests.get(
             f'{self.key_accounts_url}?public_key={public_key}&block_num={block_num}',
             headers=headers)
-        r.raise_for_status()
-        response = KeyAccountsType(**r.json())
+        if r.status_code == requests.codes.ok:
+            response = KeyAccountsType(**r.json())
+        else:
+            response = DfuseError(**r.json())
         return response
 
     def get_permission_links(self, account: str, block_num: int = 0) -> PermissionLinkType:
@@ -323,12 +334,13 @@ class Dfuse:
         }
         r = requests.get(
             f'{self.permission_links_url}?account={account}&block_num={block_num}', headers=headers)
-
-        r.raise_for_status()
-        response = PermissionLinkType(**r.json())
+        if r.status_code == requests.codes.ok:
+            response = PermissionLinkType(**r.json())
+        else:
+            response = DfuseError(**r.json())
         return response
 
-    def get_table(self, account: str, scope: str, table: str, block_num: int = 0, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false'):
+    def get_table(self, account: str, scope: str, table: str, block_num: int = 0, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false') -> StateType:
         """
         `GET /v0/state/table`
 
@@ -361,8 +373,10 @@ class Dfuse:
         }
         r = requests.get(
             f'{self.get_table_url}?account={account}&scope={scope}&table={table}&block_num={block_num}&key_type={key_type}&json={json}&with_abi={with_abi}&with_block_num={with_block_num}', headers=headers)
-        r.raise_for_status()
-        response = StateType(**r.json())
+        if r.status_code == requests.codes.ok:
+            response = StateType(**r.json())
+        else:
+            response = DfuseError(**r.json())
         return response
 
     def get_table_row(self, account: str, scope: str, table: str, primary_key: str, block_num: int,  key_type: str = 'symbol_code', json: str = 'true'):
@@ -409,8 +423,11 @@ class Dfuse:
         }
         r = requests.get(
             f'{self.get_table_row_url}?account={account}&scope={scope}&table={table}&primary_key={primary_key}&key_type={key_type}&block_num={block_num}&json={json}', headers=headers)
-        r.raise_for_status()
-        return r.json()
+        if r.status_code == requests.codes.ok:
+            response = StateTableRowType(**r.json())
+        else:
+            response = DfuseError(**r.json())
+        return response
 
     def get_table_scopes(self, account: str, table: str, block_num: int = 0):
         """
@@ -428,10 +445,13 @@ class Dfuse:
         r = requests.get(
             f'{self.table_scopes_url}?account={account}&table={table}&block_num={block_num}', headers=headers)
 
-        r.raise_for_status()
-        return r.json()
+        if r.status_code == requests.codes.ok:
+            response = TableScopeType(**r.json())
+        else:
+            response = DfuseError(**r.json())
+        return response
 
-    def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: str = 'true'):
+    def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: str = 'true') -> MultiStateType:
         """
         GET /v0/state/tables/accounts.
 
@@ -456,10 +476,51 @@ class Dfuse:
         r = requests.get(
             f'{self.get_table_url}', params=payload_str, headers=headers)
         r.raise_for_status()
-        return r.json()
+        if r.status_code == requests.codes.ok:
+            response = MultiStateType(**r.json())
+        else:
+            response = DfuseError(**r.json())
+        return response
+
+    def get_table_account_scopes(self, accounts: str, scopes: str, table: str, block_num: int = None, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false') -> MultiStateType:
+        """
+        GET /v0/state/tables/scopes
+
+        Fetches all rows for a table in a given contract for a group of scopes, at any block height.
+
+        Most parameters are similar to the /v0/state/table request, except for the scopes parameter, which accepts a list of name-encoded scopes 
+
+        separated by the pipe character (|).
+
+        https://mainnet.eos.dfuse.io/v0/state/tables/scopes?account=eosio&scopes=eosio.token|eosadddddddd|tokenbyeocat|ethsidechain|epraofficial|alibabapoole|hirevibeshvt|oo1122334455|irespotokens|publytoken11|parslseed123|trybenetwork|zkstokensr4u&table=delband&block_num=25000000&json=true
+
+        """
+        headers: dict = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        params = {'accounts': accounts,
+                  'scopes': scope,
+                  'table': table,
+                  'block_num': block_num,
+                  'json': json,
+                  'key_type': key_type,
+                  'with_block_num': with_block_num,
+                  'with_abi': with_abi
+                  }
+        payload_str = "&".join("%s=%s" % (k, v) for k, v in params.items())
+
+        r = requests.get(
+            f'{self.get_table_url}', params=payload_str, headers=headers)
+        r.raise_for_status()
+        if r.status_code == requests.codes.ok:
+            response = MultiStateType(**r.json())
+        else:
+            response = DfuseError(**r.json())
+        return response
 
     """
-    
+    TODO
+
     (Beta) GET /v0/search/transactions: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
 
     (Beta) POST /v1/chain/push_transaction: Drop-in replacement for submitting a transaction to the network, but can optionally block the request until the transaction is either in a block or in an irreversible block.
