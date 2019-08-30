@@ -2,8 +2,30 @@
 **dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x and Python 3.7.x.
 
 
-## Installation:
-### - TODO
+## Prerequisites
+
+   To get up and rolling, create a .env file in the project folder, with contents copied from the example.env file. (as required by [python decouple](https://pypi.org/project/python-decouple/))
+
+   Make sure to substitute the predefined keys with the appropriate ones.
+
+   ```API_KEY``` = YOUR_API_KEY_HERE
+
+   ```BASE_URL``` = 'https://mainnet.eos.dfuse.io' 
+   
+    (Here you can specify either https://mainnet.eos.dfuse.io or https://worbli.eos.dfuse.io 
+                    
+    or https://kylin.eos.dfuse.io or https://jungle.eos.dfuse.io. ENSURE NO trailing slash at the end)
+
+   ```BLOCK_TIME_URL``` = /v0/block_id/by_time
+
+   ```TRX_URL``` = /v0/transactions
+
+   ```STATE_BASE_URL``` = /v0/state
+
+   You can also define these values as environment variables.
+
+If the dfuse API is upgraded to another version, say v1, it is easier to switch to that with minimal changes. You only edit your .env file to match the changes.
+
 ## API Documentation:
 
 
