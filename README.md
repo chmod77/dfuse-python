@@ -30,6 +30,10 @@
 
 If the dfuse API is upgraded to another version, say v1, it is easier to switch to that with minimal changes. You only edit your .env file to match the changes.
 
+### JWT Caching
+
+Short-time lived JWT Tokens are persisted on a local sqlite3 database, and are usable for upto 22 hours.
+
 ## API Documentation:
 
 
