@@ -11,16 +11,25 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 #### **`GET /v0/block_id/by_time/by_time?time=2019-03-04T10:36:14.5Z&comparator=gte`**
 - **`Description`** - Fetches the block ID, time and block number for the given timestamp, using the ```time``` and ```comparator```  parameters.
-- **`Types`** - ```time``` - datetime
-              - ```comparator``` - string
+- **`Types`** 
+
+    - ```time``` - datetime
+    - ```comparator``` - string
 - **`Optional parameters:`**
     - None
+- This returns a `BlockTimeStampType`
 
+- You can access all the fields in the response by getting the `data` key, as shown in the following example.
 ```python
 >>> from dfuse import Dfuse
 >>> dfuse_ = Dfuse()
 >>> import datetime
->>> dfuse_.get_block_at_timestamp(time=datetime.datetime.now()-datetime.timedelta(1), comparator='gte')
+>>> obj = dfuse_.get_block_at_timestamp(time=datetime.datetime.now()-datetime.timedelta(1), comparator='gte')
+>>> obj
+
+<models.BlockTimeStampType at 0x7f7201b35860>
+
+>>>obj.data
 
 {'block': 
     {
@@ -35,7 +44,9 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 #### **`GET /v0/transactions/:id`**
 - **`Description`** - Fetches the transaction lifecycle associated with the provided path parameter ```:id```.
 
-- **`Types`** - ```id``` - string
+- **`Types`** 
+    
+    - ```id``` - string
             
 - **`Optional parameters:`**
     - None
@@ -43,101 +54,113 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Dfuse
 >>> dfuse_ = Dfuse()
->>> dfuse_.get_transaction_lifecycle(id='1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253')
+>>> obj = dfuse_.get_transaction_lifecycle(id='1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253')
 
-{
-    'transaction_status': 'executed',
-    'id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
-    'transaction': {'expiration': '2019-04-16T14:36:11',
-    'ref_block_num': 65222,
-    'ref_block_prefix': 943310534,
-    'max_net_usage_words': 0,
-    'max_cpu_usage_ms': 0,
-    'delay_sec': 0,
-    'context_free_actions': [],
-    'actions': [{'account': 'maouehmaoueh',
-        'name': 'cfainline',
-        'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
-        'hex_data': '03313233'}],
-    'transaction_extensions': [],
-    'signatures': ['SIG_K1_Jyv32XzrAGQepnk7p3YwXbRyNcp6Cztt8peR41GjfJ5hjDhjNfyf4ViubcShaDGd1BB9NEKGRrGjsQadzvwKrp7Wkjx9kh'],
-    'context_free_data': []},
-    'execution_trace': {'id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
-    'block_num': 53280461,
-    'block_time': '2019-04-16T14:35:41.5',
-    'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
-    'receipt': {'status': 'executed',
-    'cpu_usage_us': 1191,
-    'net_usage_words': 12},
-    'elapsed': 71934,
-    'net_usage': 96,
-    'scheduled': False,
-    'action_traces': [{'receipt': {'receiver': 'maouehmaoueh',
-        'act_digest': '5a2ffd1d0376049b5fcaa7d5f122723973c8fea40de9aba059bc439b4f77fd5e',
-        'global_sequence': '6249291689',
-        'auth_sequence': [['maouehmaoueh', 13]],
-        'recv_sequence': 5,
-        'code_sequence': 2,
-        'abi_sequence': 1},
-        'act': {'account': 'maouehmaoueh',
-        'name': 'cfainline',
-        'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
-        'data': {'data': '123'},
-        'hex_data': '03313233'},
-        'context_free': False,
-        'elapsed': 71857,
-        'console': '',
-        'trx_id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+>>>obj
+
+    <models.TransactionLifecycle at 0x7f72024effd0>
+
+
+>>> obj.data
+
+    {
+        'transaction_status': 'executed',
+        'id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+        'transaction': {'expiration': '2019-04-16T14:36:11',
+        'ref_block_num': 65222,
+        'ref_block_prefix': 943310534,
+        'max_net_usage_words': 0,
+        'max_cpu_usage_ms': 0,
+        'delay_sec': 0,
+        'context_free_actions': [],
+        'actions': [{'account': 'maouehmaoueh',
+            'name': 'cfainline',
+            'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
+            'hex_data': '03313233'}],
+        'transaction_extensions': [],
+        'signatures': ['SIG_K1_Jyv32XzrAGQepnk7p3YwXbRyNcp6Cztt8peR41GjfJ5hjDhjNfyf4ViubcShaDGd1BB9NEKGRrGjsQadzvwKrp7Wkjx9kh'],
+        'context_free_data': []},
+        'execution_trace': {'id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
         'block_num': 53280461,
         'block_time': '2019-04-16T14:35:41.5',
         'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
-        'account_ram_deltas': None,
-        'except': None,
-        'inline_traces': [{'receipt': {'receiver': 'dfuseiohooks',
-        'act_digest': '469d68d4e68c0adc6fd302ca60b4d27256400965b90baf7a5736c9e0ed0b3d0f',
-        'global_sequence': '6249291690',
-        'auth_sequence': [],
-        'recv_sequence': 2,
-        'code_sequence': 0,
-        'abi_sequence': 1},
-        'act': {'account': 'dfuseiohooks',
-        'name': 'event',
-        'data': {'data': 'testing=123', 'key': ''},
-        'hex_data': '000b74657374696e673d313233'},
-        'context_free': True,
-        'elapsed': 11,
-        'console': '',
-        'trx_id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
-        'block_num': 53280461,
-        'block_time': '2019-04-16T14:35:41.5',
-        'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
-        'account_ram_deltas': None,
-        'except': None,
-        'inline_traces': None}]}],
-    'failed_dtrx_trace': None,
-    'except': None},
-    'execution_block_header': {'timestamp': '2019-04-16T14:35:41.5',
-    'producer': 'bitfinexeos1',
-    'confirmed': 0,
-    'previous': '032cfeccf3b57dd793d3ff831adb381225fa7c2b4a998a3c16502c2774581e36',
-    'transaction_mroot': 'a4317c9ce3c3925fac8bda2463a06d5b5876b37ea4b0b2af36bb42d028910a66',
-    'action_mroot': '16187708fc3827f31d2fbe8ecf6c1877e2b5f0050e63f025edd01eeff4dec82f',
-    'schedule_version': 773,
-    'new_producers': None,
-    'header_extensions': []},
-    'dtrxops': None,
-    'creation_tree': [],
-    'dbops': None,
-    'ramops': None,
-    'tableops': None,
-    'pub_keys': ['EOS8b3K9r6mLDykeL7GzGJCFt9Z5SRSHSXFT77yHz8e3z7en1tFwG'],
-    'created_by': None,
-    'canceled_by': None,
-    'execution_irreversible': True,
-    'creation_irreversible': True,
-    'cancelation_irreversible': False
- }
+        'receipt': {'status': 'executed',
+        'cpu_usage_us': 1191,
+        'net_usage_words': 12},
+        'elapsed': 71934,
+        'net_usage': 96,
+        'scheduled': False,
+        'action_traces': [{'receipt': {'receiver': 'maouehmaoueh',
+            'act_digest': '5a2ffd1d0376049b5fcaa7d5f122723973c8fea40de9aba059bc439b4f77fd5e',
+            'global_sequence': '6249291689',
+            'auth_sequence': [['maouehmaoueh', 13]],
+            'recv_sequence': 5,
+            'code_sequence': 2,
+            'abi_sequence': 1},
+            'act': {'account': 'maouehmaoueh',
+            'name': 'cfainline',
+            'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
+            'data': {'data': '123'},
+            'hex_data': '03313233'},
+            'context_free': False,
+            'elapsed': 71857,
+            'console': '',
+            'trx_id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+            'block_num': 53280461,
+            'block_time': '2019-04-16T14:35:41.5',
+            'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
+            'account_ram_deltas': None,
+            'except': None,
+            'inline_traces': [{'receipt': {'receiver': 'dfuseiohooks',
+            'act_digest': '469d68d4e68c0adc6fd302ca60b4d27256400965b90baf7a5736c9e0ed0b3d0f',
+            'global_sequence': '6249291690',
+            'auth_sequence': [],
+            'recv_sequence': 2,
+            'code_sequence': 0,
+            'abi_sequence': 1},
+            'act': {'account': 'dfuseiohooks',
+            'name': 'event',
+            'data': {'data': 'testing=123', 'key': ''},
+            'hex_data': '000b74657374696e673d313233'},
+            'context_free': True,
+            'elapsed': 11,
+            'console': '',
+            'trx_id': '1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253',
+            'block_num': 53280461,
+            'block_time': '2019-04-16T14:35:41.5',
+            'producer_block_id': '032cfecd63f2e42da2fb5b7f632acadbe5153756db615c5d28bbc99f9bd0976d',
+            'account_ram_deltas': None,
+            'except': None,
+            'inline_traces': None}]}],
+        'failed_dtrx_trace': None,
+        'except': None},
+        'execution_block_header': {'timestamp': '2019-04-16T14:35:41.5',
+        'producer': 'bitfinexeos1',
+        'confirmed': 0,
+        'previous': '032cfeccf3b57dd793d3ff831adb381225fa7c2b4a998a3c16502c2774581e36',
+        'transaction_mroot': 'a4317c9ce3c3925fac8bda2463a06d5b5876b37ea4b0b2af36bb42d028910a66',
+        'action_mroot': '16187708fc3827f31d2fbe8ecf6c1877e2b5f0050e63f025edd01eeff4dec82f',
+        'schedule_version': 773,
+        'new_producers': None,
+        'header_extensions': []},
+        'dtrxops': None,
+        'creation_tree': [],
+        'dbops': None,
+        'ramops': None,
+        'tableops': None,
+        'pub_keys': ['EOS8b3K9r6mLDykeL7GzGJCFt9Z5SRSHSXFT77yHz8e3z7en1tFwG'],
+        'created_by': None,
+        'canceled_by': None,
+        'execution_irreversible': True,
+        'creation_irreversible': True,
+        'cancelation_irreversible': False
+    }
+
+ >>> obj.transaction_status
+
+    'executed'
 ```
+
 #### **`GET /v0/state/abi?account={account}&json={true/false}&block_num=int`**
 - **`Description`** - Fetch the ABI for a given contract ```account```, at any ```block_num``` height.
                     The ```block_num``` parameter determines for which block you want the given ABI. This can be anywhere in the chain’s history. 
@@ -159,20 +182,181 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Dfuse
 >>> dfuse_ = Dfuse()
->>> dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
+>>>obj = dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
 
-{'block_num': 57202658,
- 'account': 'arbarotokenn',
- 'abi': '0e656f73696f3a3a6162692f312e310009076163636f756e7400020762616c616e6365056173736574096c617374636c61696d05617373657405636c61696d0002056f776e6572046e616d6508746f6b656e73796d0673796d626f6c05636c6f73650002056f776e6572046e616d650673796d626f6c0673796d626f6c06637265617465000206697373756572046e616d650e6d6178696d756d5f737570706c790561737365740e63757272656e63795f7374617473000406737570706c790561737365740a6d61785f737570706c7905617373657406697373756572046e616d650e746f74616c6469766964656e6473056173736574056973737565000302746f046e616d65087175616e74697479056173736574046d656d6f06737472696e67046f70656e0003056f776e6572046e616d650673796d626f6c0673796d626f6c0972616d5f7061796572046e616d65067265746972650002087175616e74697479056173736574046d656d6f06737472696e67087472616e7366657200040466726f6d046e616d6502746f046e616d65087175616e74697479056173736574046d656d6f06737472696e67070000000000e94c4405636c61696d00000000000085694405636c6f73650000000000a86cd44506637265617465000000000000a531760569737375650000000000003055a5046f70656e0000000000a8ebb2ba0672657469726500000000572d3ccdcd087472616e736665720002000000384f4d1132036936340000076163636f756e740000000000904dc60369363400000e63757272656e63795f737461747300000000'
-}
+>>>obj
+
+    <models.ABIType at 0x7f54dc041828>
+
+>>>obj.data
+
+    {'block_num': 57202658,
+    'account': 'arbarotokenn',
+    'abi': {'version': 'eosio::abi/1.1',
+    'structs': [{'name': 'account',
+        'base': '',
+        'fields': [{'name': 'balance', 'type': 'asset'},
+        {'name': 'lastclaim', 'type': 'asset'}]},
+    {'name': 'claim',
+        'base': '',
+        'fields': [{'name': 'owner', 'type': 'name'},
+        {'name': 'tokensym', 'type': 'symbol'}]},
+    {'name': 'close',
+        'base': '',
+        'fields': [{'name': 'owner', 'type': 'name'},
+        {'name': 'symbol', 'type': 'symbol'}]},
+    {'name': 'create',
+        'base': '',
+        'fields': [{'name': 'issuer', 'type': 'name'},
+        {'name': 'maximum_supply', 'type': 'asset'}]},
+    {'name': 'currency_stats',
+        'base': '',
+        'fields': [{'name': 'supply', 'type': 'asset'},
+        {'name': 'max_supply', 'type': 'asset'},
+        {'name': 'issuer', 'type': 'name'},
+        {'name': 'totaldividends', 'type': 'asset'}]},
+    {'name': 'issue',
+        'base': '',
+        'fields': [{'name': 'to', 'type': 'name'},
+        {'name': 'quantity', 'type': 'asset'},
+        {'name': 'memo', 'type': 'string'}]},
+    {'name': 'open',
+        'base': '',
+        'fields': [{'name': 'owner', 'type': 'name'},
+        {'name': 'symbol', 'type': 'symbol'},
+        {'name': 'ram_payer', 'type': 'name'}]},
+    {'name': 'retire',
+        'base': '',
+        'fields': [{'name': 'quantity', 'type': 'asset'},
+        {'name': 'memo', 'type': 'string'}]},
+    {'name': 'transfer',
+        'base': '',
+        'fields': [{'name': 'from', 'type': 'name'},
+        {'name': 'to', 'type': 'name'},
+        {'name': 'quantity', 'type': 'asset'},
+        {'name': 'memo', 'type': 'string'}]}],
+    'actions': [{'name': 'claim', 'type': 'claim', 'ricardian_contract': ''},
+    {'name': 'close', 'type': 'close', 'ricardian_contract': ''},
+    {'name': 'create', 'type': 'create', 'ricardian_contract': ''},
+    {'name': 'issue', 'type': 'issue', 'ricardian_contract': ''},
+    {'name': 'open', 'type': 'open', 'ricardian_contract': ''},
+    {'name': 'retire', 'type': 'retire', 'ricardian_contract': ''},
+    {'name': 'transfer', 'type': 'transfer', 'ricardian_contract': ''}],
+    'tables': [{'name': 'accounts', 'index_type': 'i64', 'type': 'account'},
+    {'name': 'stat', 'index_type': 'i64', 'type': 'currency_stats'}]}}
+
 
 ```
 
-# TODO:
+#### **`POST /v0/state/abi/bin_to_json`**
+- **`Description`** - Decodes binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
+                
+    The returned ABI is the one that was active at the block_num requested.
 
--  **POST** ```/v0/state/abi/bin_to_json```: Decode binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
+    The block_num parameter determines for which block you want to decode rows against. This can be anywhere in the chain’s history.
 
--  **GET** ```/v0/state/permission_links```: Fetching snapshots of any account’s linked authorizations on the blockchain, at any block height.
+    If the requested `block_num` is irreversible, decoding will be performed against an immutable ABI. If the ABI has changed while still in a reversible chain, decoding will be performed against this new ABI, but it is not guaranteed to be the view that will pass irreversibility. Inspect the returned `block_num` parameter of the response to understand from which longest chain the returned ABI is from.
+
+- **`Types`** 
+    - ```account``` - string (required)
+    - ```table``` - The name-encoded table name you want to retrieve (contract dependent)
+    - ```hex_rows``` - An array of hexadecimal rows to decode. Each row must be a valid hexadecimal string representation of the row to decode against the ABI.
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+            
+- **`Optional parameters:`**
+    - ```block_num```
+
+```python
+>>> from dfuse import Dfuse
+>>> dfuse_ = Dfuse()
+>>>obj = dfuse_.bin_to_json(account='eosio.token', table='accounts',  hex_rows=["aa2c0b010000000004454f5300000000"], block_num=2600000)
+
+>>> obj
+
+    <models.Bin2JSONType at 0x7f54c4763908>
+
+>>> obj.data
+
+    {
+        'block_num': 181,
+        'account': 'eosio.token',
+        'table': 'accounts',
+        'rows': [
+            {
+                'balance': '1750.9546 EOS'
+            }
+        ]
+    }
+
+>>> obj.account
+
+    'eosio.token'
+
+>>> obj.block_num
+
+    181
+
+```
+
+#### **`GET /v0/state/permission_links`**
+- **`Description`** Fetches snapshots of any account’s linked authorizations on the blockchain, at any block height.
+
+    The block_num parameter determines for which block you want a linked authorizations snapshot. This can be anywhere in the chain’s history.
+
+    If the requested block_num is irreversible, you will get an immutable snapshot. If the block_num is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to be the view that will pass irreversibility. Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
+                    
+
+- **`Types`** 
+    - ```account``` - string (required)
+
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+            
+- **`Optional parameters:`**
+    - ```block_num```
+
+
+```python
+>>> from dfuse import Dfuse
+>>> dfuse_ = Dfuse()
+>>> obj = dfuse_.get_permission_links(account='eoscanadacom', block_num=25000000)  
+
+>>> obj
+
+    <models.PermissionLinkType at 0x7f54c7501c50>
+
+>>> obj.data
+
+    {'last_irreversible_block_id': '04931d68265c1fba52f772e031e67d2f16d898ed0ee0c60384db163345e7d0f1',
+    'last_irreversible_block_num': 76750184,
+    'linked_permissions': [{'contract': 'eosforumdapp',
+    'action': 'post',
+    'permission_name': 'day2day'},
+    {'contract': 'eosforumdapp',
+    'action': 'status',
+    'permission_name': 'day2day'},
+    {'contract': 'eosforumdapp',
+    'action': 'unpost',
+    'permission_name': 'day2day'},
+    {'contract': 'eosio',
+    'action': 'claimrewards',
+    'permission_name': 'claimer'},
+    {'contract': 'eosio', 'action': 'regproducer', 'permission_name': 'day2day'},
+    {'contract': 'eosio', 'action': 'unregprod', 'permission_name': 'day2day'},
+    {'contract': 'theblacklist',
+    'action': 'sethash',
+    'permission_name': 'blacklistops'}]}
+
+>>> obj.last_irreversible_block_id
+
+    '04931d68265c1fba52f772e031e67d2f16d898ed0ee0c60384db163345e7d0f1'
+
+>>> obj.last_irreversible_block_num 
+    
+    76750184
+
+
+
+```
 
 -  **GET** ```/v0/state/table```: Fetching snapshots of any table on the blockchain, at any block height.
 
