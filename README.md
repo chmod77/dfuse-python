@@ -29,7 +29,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 <models.BlockTimeStampType at 0x7f7201b35860>
 
->>>obj.data
+>>> obj.data
 
 {'block': 
     {
@@ -42,7 +42,9 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```
 
 #### **`GET /v0/transactions/:id`**
-- **`Description`** - Fetches the transaction lifecycle associated with the provided path parameter ```:id```.
+- **`Description`**  
+    
+    Fetches the transaction lifecycle associated with the provided path parameter ```:id```.
 
 - **`Types`** 
     
@@ -56,7 +58,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 >>> dfuse_ = Dfuse()
 >>> obj = dfuse_.get_transaction_lifecycle(id='1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253')
 
->>>obj
+>>> obj
 
     <models.TransactionLifecycle at 0x7f72024effd0>
 
@@ -162,7 +164,9 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```
 
 #### **`GET /v0/state/abi?account={account}&json={true/false}&block_num=int`**
-- **`Description`** - Fetch the ABI for a given contract ```account```, at any ```block_num``` height.
+- **`Description`**  
+    
+    Fetch the ABI for a given contract ```account```, at any ```block_num``` height.
                     The ```block_num``` parameter determines for which block you want the given ABI. This can be anywhere in the chain’s history. 
                     
     If the requested ```block_num``` is irreversible, you will get an immutable ABI. If the ABI has changed while still in a reversible chain, you will get this new ABI, but it is not guaranteed to be the view that will pass irreversibility. Inspect the returned block_num parameter of the response to understand from which longest chain the returned ABI is from.
@@ -182,13 +186,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Dfuse
 >>> dfuse_ = Dfuse()
->>>obj = dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
+>>> obj = dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
 
->>>obj
+>>> obj
 
     <models.ABIType at 0x7f54dc041828>
 
->>>obj.data
+>>> obj.data
 
     {'block_num': 57202658,
     'account': 'arbarotokenn',
@@ -249,7 +253,9 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```
 
 #### **`POST /v0/state/abi/bin_to_json`**
-- **`Description`** - Decodes binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
+- **`Description`**  
+    
+    Decodes binary rows (in hexadecimal string) for a given table against the ABI of a given contract account, at any block height.
                 
     The returned ABI is the one that was active at the block_num requested.
 
@@ -269,7 +275,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Dfuse
 >>> dfuse_ = Dfuse()
->>>obj = dfuse_.bin_to_json(account='eosio.token', table='accounts',  hex_rows=["aa2c0b010000000004454f5300000000"], block_num=2600000)
+>>> obj = dfuse_.bin_to_json(account='eosio.token', table='accounts',  hex_rows=["aa2c0b010000000004454f5300000000"], block_num=2600000)
 
 >>> obj
 
@@ -298,8 +304,54 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 ```
 
+#### **`GET /v0/state/key_accounts`**
+- **`Description`** 
+    
+    Fetches the accounts controlled by the given public key, at any block height.
+
+    NOTE: this endpoint is a drop-in replacement for the /v1/history/get_key_accounts API endpoint from standard nodeos. Simply tweak the URL, and add the Bearer token.
+
+    The block_num parameter determines for which block height you want a list of accounts associated to the given public key. This can be anywhere in the chain’s history.
+
+    If the requested block_num is irreversible, you will get an immutable list of accounts. Otherwise, there are chances that the returned value moves as the chain reorganizes.
+                    
+
+- **`Types`** 
+    - ```public_key``` - The public key to fetch controlled accounts for. string (required)
+
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+            
+- **`Optional parameters:`**
+    - ```block_num```
+
+```python
+
+>>> from dfuse import Dfuse
+>>> dfuse_ = Dfuse()
+>>> obj = dfuse_.get_key_accounts(public_key='EOS744heXNxjLamUjLxaLpn6gREh3CVf5VvFESq9sG969VmcNYyq6')
+
+>>> obj
+
+    <models.KeyAccountsType at 0x7f54c7169be0>
+
+>>> obj.data
+
+    {'block_num': 76752386, 'account_names': ['greenunicorn']}
+
+>>> obj.block_num
+
+    76752386
+
+>>> obj.account_names
+
+    ['greenunicorn']
+```
+
+
 #### **`GET /v0/state/permission_links`**
-- **`Description`** Fetches snapshots of any account’s linked authorizations on the blockchain, at any block height.
+- **`Description`** 
+    
+    Fetches snapshots of any account’s linked authorizations on the blockchain, at any block height.
 
     The block_num parameter determines for which block you want a linked authorizations snapshot. This can be anywhere in the chain’s history.
 
@@ -354,13 +406,75 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     
     76750184
 
+```
 
+#### **`GET/v0/state/table`**
+- **`Description`** 
+    
+    Fetches the state of any table, at any block height.
+
+    The block_num parameter determines for which block you want a table snapshot. This can be anywhere in the chain’s history.
+
+    If the requested block_num is irreversible, you will get an immutable snapshot. If the block_num is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility. Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
+                    
+
+- **`Types`** 
+
+    - ```account``` - string (required)
+
+    - ```scope``` - The name-encoded scope of the table you are requesting. (required)
+
+    - ```table``` - table name you want to retrieve (required)
+
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+
+    - ```json```  - boolean (optional, defaults to false)
+
+    - ```key_type``` - How to represent the row keys in the returned table. string (optional, defaults to `name`) 
+
+    - Valid `key_type`s:
+                    
+        - `name` (default) for EOS name-encoded base32 representation of the row key
+        - `hex` for hexadecimal encoding, ex: abcdef1234567890
+        - `hex_be` for big endian hexadecimal encoding, ex: 9078563412efcdab
+        - `uint64` for string encoded uint64
+            
+- **`Optional parameters:`**
+    - ```block_num```
+    - ```json```
+    - ```key_type```
+
+```python
+
+>>> from dfuse import Dfuse
+>>> dfuse_ = Dfuse()
+>>> obj = dfuse_.get_table(account='eosio.token', scope='greenunicorn', table='accounts', block_num=74000000) 
+
+>>> obj
+
+    <models.StateType at 0x7f54c711f908>
+
+>>> obj.data
+
+    {'last_irreversible_block_id': '04932bcb8edd41317814654da379057d6a2f880aaf2e095a602b997eedc5c143',
+        'last_irreversible_block_num': 76753867,
+        'rows': [{'key': '........ehbo5',
+        'payer': 'greenunicorn',
+        'json': {'balance': '0.7585 EOS'}}
+        ]
+    }
+
+>>> obj.obj.last_irreversible_block_id
+
+    '04932bcb8edd41317814654da379057d6a2f880aaf2e095a602b997eedc5c143'
 
 ```
 
--  **GET** ```/v0/state/table```: Fetching snapshots of any table on the blockchain, at any block height.
+#### **`GET /v0/state/table/accounts`**
+    
+    TODO
 
--  **GET** ```/v0/state/table/accounts```: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
+-  **GET** ``````: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
 
 -  **GET** ```/v0/state/table/scopes```: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
 
