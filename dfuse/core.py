@@ -19,6 +19,7 @@ from models import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
                     PermissionLinkType, StateTableRowType, StateType,
                     TableScopeType, TransactionLifecycle)
 from ws import dws
+BASE_URL = config('')
 
 
 class Dfuse:
@@ -28,9 +29,12 @@ class Dfuse:
     __TEMPDIR_CACHE: bool = True
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
 
-    __BLOCK_TIME_URL: str = 'https://mainnet.eos.dfuse.io/v0/block_id/by_time'
-    __TRX_URL: str = 'https://mainnet.eos.dfuse.io/v0/transactions'
-    __STATE_BASE_URL: str = 'https://mainnet.eos.dfuse.io/v0/state'
+    __BLOCK_TIME_URL: str = config(
+        'BLOCK_TIME_URL', 'https://mainnet.eos.dfuse.io/v0/block_id/by_time')
+    __TRX_URL: str = config(
+        'TRX_URL', 'https://mainnet.eos.dfuse.io/v0/transactions')
+    __STATE_BASE_URL: str = config(
+        'STATE_BASE_URL', 'https://mainnet.eos.dfuse.io/v0/state')
     __API_KEY: str = config('API_KEY')
 
     def __init__(
