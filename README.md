@@ -14,7 +14,11 @@
    
     (Here you can specify either https://mainnet.eos.dfuse.io or https://worbli.eos.dfuse.io 
                     
-    or https://kylin.eos.dfuse.io or https://jungle.eos.dfuse.io. ENSURE NO trailing slash at the end)
+    or https://kylin.eos.dfuse.io or https://jungle.eos.dfuse.io.)
+
+
+**ENSURE NO trailing slash at the end of the BASE_URL**
+
 
    ```BLOCK_TIME_URL``` = /v0/block_id/by_time
 
