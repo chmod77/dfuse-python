@@ -15,8 +15,9 @@ from decouple import config
 
 from db import persist
 from models import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
-                    DfuseError, KeyAccountsType, PermissionLinkType,
-                    TransactionLifecycle, StateTableRowType, TableScopeType, MultiStateType)
+                    DfuseError, KeyAccountsType, MultiStateType,
+                    PermissionLinkType, StateTableRowType, StateType,
+                    TableScopeType, TransactionLifecycle)
 from ws import dws
 
 
