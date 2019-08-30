@@ -500,8 +500,6 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     
     TODO
 
--  **GET** ``````: Fetching snapshots of any table on the blockchain, at any block height, for a list of accounts (contracts).
-
 -  **GET** ```/v0/state/table/scopes```: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
 
 -  **GET** ```/v0/search/transactions```: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
