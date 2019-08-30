@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-   To get up and rolling, create a .env file in the project folder, with contents copied from the example.env file. (as required by [python decouple](https://pypi.org/project/python-decouple/))
+   To get up and rolling, create a .env or .ini file in the project folder, with contents copied from the example.env file. (as required by [python decouple](https://pypi.org/project/python-decouple/))
 
    Make sure to substitute the predefined keys with the appropriate ones.
 
