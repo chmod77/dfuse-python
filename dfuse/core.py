@@ -19,7 +19,6 @@ from models import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
                     PermissionLinkType, StateTableRowType, StateType,
                     TableScopeType, TransactionLifecycle)
 from ws import dws
-BASE_URL = config('')
 
 
 class Dfuse:
