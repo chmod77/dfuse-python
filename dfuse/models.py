@@ -161,7 +161,6 @@ class TransactionLifecycle:
                  pub_keys: List[str] = None, created_by: ExtDTrxop = None, canceled_by: ExtDTrxop = None,
                  execution_irreversible: bool = None,
                  creation_irreversible: bool = None, cancelation_irreversible: bool = None, **kwargs):
-
         self.id = id
         self.transaction_status = transaction_status
         self.transaction = Transaction(**transaction)
@@ -177,6 +176,7 @@ class TransactionLifecycle:
         self.execution_irreversible = execution_irreversible
         self.creation_irreversible = creation_irreversible
         self.cancelation_irreversible = cancelation_irreversible
+        self.data=self.__dict__
 
 
 class ABIType:
