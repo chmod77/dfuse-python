@@ -23,28 +23,27 @@ from ws import dws
 
 class Dfuse:
     _session = None
-    __DEFAULT_BASE_URL: str = ""
+    __DEFAULT_BASE_URL: str = config('BASE_URL')
     __DEFAULT_TIMEOUT: int = 30
     __TEMPDIR_CACHE: bool = True
     def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
-
     __BLOCK_TIME_URL: str = config(
-        'BLOCK_TIME_URL', 'https://mainnet.eos.dfuse.io/v0/block_id/by_time')
+        'BLOCK_TIME_URL')
     __TRX_URL: str = config(
-        'TRX_URL', 'https://mainnet.eos.dfuse.io/v0/transactions')
+        'TRX_URL')
     __STATE_BASE_URL: str = config(
-        'STATE_BASE_URL', 'https://mainnet.eos.dfuse.io/v0/state')
+        'STATE_BASE_URL')
     __API_KEY: str = config('API_KEY')
 
     def __init__(
         self,
-        api_key: str = __API_KEY,
-        base_url: str = __DEFAULT_BASE_URL,
-        state_base_url: str = __STATE_BASE_URL,
+        api_key: str = f'{__DEFAULT_BASE_URL}{__API_KEY}',
+        base_url: str = f'{__DEFAULT_BASE_URL}',
+        state_base_url: str = f'{__DEFAULT_BASE_URL}{__STATE_BASE_URL}',
         request_timeout: int = __DEFAULT_TIMEOUT,
         tempdir_cache: bool = __TEMPDIR_CACHE,
-        block_by_time_url: str = __BLOCK_TIME_URL,
-        trx_url: str = __TRX_URL,
+        block_by_time_url: str = f'{__DEFAULT_BASE_URL}{__BLOCK_TIME_URL}',
+        trx_url: str = f'{__DEFAULT_BASE_URL}{__TRX_URL}',
         token: str = '',
     ):
         self.api_key = api_key
