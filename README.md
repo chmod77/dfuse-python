@@ -8,9 +8,9 @@
 
    Make sure to substitute the predefined keys with the appropriate ones.
 
-   ```API_KEY``` = YOUR_API_KEY_HERE
+   ```API_KEY = YOUR_API_KEY_HERE```
 
-   ```BASE_URL``` = 'https://mainnet.eos.dfuse.io' 
+   ```BASE_URL = https://mainnet.eos.dfuse.io``` 
    
     (Here you can specify either https://mainnet.eos.dfuse.io or https://worbli.eos.dfuse.io 
                     
@@ -20,11 +20,11 @@
 **ENSURE NO trailing slash at the end of the BASE_URL**
 
 
-   ```BLOCK_TIME_URL``` = /v0/block_id/by_time
+   ```BLOCK_TIME_URL = /v0/block_id/by_time```
 
-   ```TRX_URL``` = /v0/transactions
+   ```TRX_URL = /v0/transactions```
 
-   ```STATE_BASE_URL``` = /v0/state
+   ```STATE_BASE_URL = /v0/state```
 
    You can also define these values as environment variables.
 
