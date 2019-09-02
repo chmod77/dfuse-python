@@ -3,12 +3,12 @@
 
 
 import datetime
-import json
+import json as js
 import os
 import sqlite3
 import tempfile
 from typing import Any, Dict, Sequence
-
+from urllib.parse import urlencode
 import requests
 import requests_cache
 from decouple import config
@@ -37,7 +37,7 @@ class Dfuse:
 
     def __init__(
         self,
-        api_key: str = f'{__DEFAULT_BASE_URL}{__API_KEY}',
+        api_key: str = config('API_KEY'),
         base_url: str = f'{__DEFAULT_BASE_URL}',
         state_base_url: str = f'{__DEFAULT_BASE_URL}{__STATE_BASE_URL}',
         request_timeout: int = __DEFAULT_TIMEOUT,
@@ -61,6 +61,7 @@ class Dfuse:
         self.permission_links_url = f'{state_base_url}/permission_links'
         self.table_scopes_url = f'{state_base_url}/table_scopes'
         self.get_table_accounts_url = f'{state_base_url}/tables/accounts'
+        self.get_table_account_scopes_url = f'{state_base_url}/tables/scopes'
         self.cache_name = (
             os.path.join(tempfile.gettempdir(), self.cache_filename)
             if tempdir_cache
@@ -456,7 +457,7 @@ class Dfuse:
 
     def get_table_accounts(self, accounts: str, scope: str, table: str, block_num: int = None, json: str = 'true') -> MultiStateType:
         """
-        GET /v0/state/tables/accounts.
+        POST /v0/state/tables/accounts.
 
         Fetches a table from a group of contract accounts, at any block height.
 
@@ -465,27 +466,35 @@ class Dfuse:
         https://mainnet.eos.dfuse.io/v0/state/tables/accounts?accounts=eosio.token|eosadddddddd|tokenbyeocat|ethsidechain|epraofficial|alibabapoole|hirevibeshvt|oo1122334455|irespotokens|publytoken11|parslseed123|trybenetwork|zkstokensr4u&scope=b1&table=accounts&block_num=25000000&json=true
 
         """
+        # payload = {'user_name': 'admin', 'password': 'password'}
+        # r = requests.post("http://httpbin.org/post", data=payload)
+        # print(r.url)
+        # print(r.text)
         headers: dict = {
-            'Authorization': f'Bearer {self.token}'
+            'Authorization': f'Bearer {self.token}',
+            
         }
-        params = {'accounts': accounts,
-                  'scope': scope,
-                  'table': table,
-                  'block_num': block_num,
-                  'json': json
-                  }
-        payload_str = "&".join("%s=%s" % (k, v) for k, v in params.items())
-
-        r = requests.get(
-            f'{self.get_table_url}', params=payload_str, headers=headers)
-        r.raise_for_status()
+        payload = {
+            'accounts': accounts,
+            'scope': scope,
+            'table': table,
+            'block_num': block_num,
+            'json': json
+        }
+        post_data = urlencode(payload).encode('ascii')
+        r = requests.post(
+            f'{self.get_table_accounts_url}', data=payload, headers=headers)
+        print(self.get_table_accounts_url)
+        print(r.headers)
+        print(r.request.body)
         if r.status_code == requests.codes.ok:
             response = MultiStateType(**r.json())
         else:
+            print(r)
             response = DfuseError(**r.json())
         return response
 
-    def get_table_account_scopes(self, accounts: str, scopes: str, table: str, block_num: int = None, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false') -> MultiStateType:
+    def get_table_account_scopes(self, account: str, scopes: str, table: str, block_num: int = None, json: str = 'true', key_type: str = 'name', with_block_num: str = 'false', with_abi: str = 'false') -> MultiStateType:
         """
         GET /v0/state/tables/scopes
 
@@ -499,21 +508,21 @@ class Dfuse:
 
         """
         headers: dict = {
-            'Authorization': f'Bearer {self.token}'
+            'Authorization': f'Bearer {self.token}',
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
-        params = {'accounts': accounts,
-                  'scopes': scope,
-                  'table': table,
-                  'block_num': block_num,
-                  'json': json,
-                  'key_type': key_type,
-                  'with_block_num': with_block_num,
-                  'with_abi': with_abi
-                  }
-        payload_str = "&".join("%s=%s" % (k, v) for k, v in params.items())
+        payload = {'account': account,
+                   'scopes': scopes,
+                   'table': table,
+                   'block_num': block_num,
+                   'json': json,
+                   'key_type': key_type,
+                   'with_block_num': with_block_num,
+                   'with_abi': with_abi
+                   }
 
-        r = requests.get(
-            f'{self.get_table_url}', params=payload_str, headers=headers)
+        r = requests.post(
+            f'{self.get_table_account_scopes_url}', data=payload, headers=headers)
         r.raise_for_status()
         if r.status_code == requests.codes.ok:
             response = MultiStateType(**r.json())
