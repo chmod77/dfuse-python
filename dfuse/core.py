@@ -466,13 +466,10 @@ class Dfuse:
         https://mainnet.eos.dfuse.io/v0/state/tables/accounts?accounts=eosio.token|eosadddddddd|tokenbyeocat|ethsidechain|epraofficial|alibabapoole|hirevibeshvt|oo1122334455|irespotokens|publytoken11|parslseed123|trybenetwork|zkstokensr4u&scope=b1&table=accounts&block_num=25000000&json=true
 
         """
-        # payload = {'user_name': 'admin', 'password': 'password'}
-        # r = requests.post("http://httpbin.org/post", data=payload)
-        # print(r.url)
-        # print(r.text)
+
         headers: dict = {
             'Authorization': f'Bearer {self.token}',
-            
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
         payload = {
             'accounts': accounts,
@@ -483,7 +480,6 @@ class Dfuse:
         }
         r = requests.post(
             f'{self.get_table_accounts_url}', data=payload, headers=headers)
-
         if r.status_code == requests.codes.ok:
             response = MultiStateType(**r.json())
         else:
@@ -519,7 +515,6 @@ class Dfuse:
 
         r = requests.post(
             f'{self.get_table_account_scopes_url}', data=payload, headers=headers)
-        r.raise_for_status()
         if r.status_code == requests.codes.ok:
             response = MultiStateType(**r.json())
         else:
