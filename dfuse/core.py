@@ -481,16 +481,12 @@ class Dfuse:
             'block_num': block_num,
             'json': json
         }
-        post_data = urlencode(payload).encode('ascii')
         r = requests.post(
             f'{self.get_table_accounts_url}', data=payload, headers=headers)
-        print(self.get_table_accounts_url)
-        print(r.headers)
-        print(r.request.body)
+
         if r.status_code == requests.codes.ok:
             response = MultiStateType(**r.json())
         else:
-            print(r)
             response = DfuseError(**r.json())
         return response
 
