@@ -532,8 +532,9 @@ class Dfuse:
     """
 
     # WEBSOCKETS
-    def listen_websocket(self, data: dict, request_id: str, request_type: str, type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0):
-        dws.run(data, request_id, request_type, type, listen,
+    def listen_websocket(self, data: dict, request_id: str, request_type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 5):
+
+        dws.run(self.token, data, request_id, request_type, listen,
                 irreversible_only, fetch, with_progress)
 
     # GRAPHQL via grpc
