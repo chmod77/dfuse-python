@@ -6,7 +6,7 @@ import json
 KEY = "eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDQ4MjczMzIsImp0aSI6Ijg5MWE2ZjcxLWYxMmUtNGY1NC04NjAzLTNjMjkyMmFlMDY1YSIsImlhdCI6MTU0MjIzNTMzMiwiaXNzIjoiZGZ1c2UuaW8iLCJzdWIiOiJDaVFBNmNieWU0SzE5Z3Q4NkFicUtRbmpKYVdTTXg0dkR3U09zZlBYUFpWQmlWSzlsTXNTUGdBL0NMUnR0L211eUE5MEFUaHZrUkR0d0RYUjhpdVBHTUlyKzFqdWprZGNZVTdPb1BSQ0hab0MvM3BLVmJkV1UwMVVvVGRMU3NDdlFaSkdreU5RIiwidGllciI6ImJldGEtdjEiLCJ2IjoxfQ.xdQq2R1wyipNeSDT-UA2CTNkzHQAshobsIB-pujewf_s6L1p7Js19Om7AfowabOHkzJ5J-rogmLAENN0XUiotw"
 K2 = "eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjY5NDIyMDksImp0aSI6ImYzNmQ0ZDM5LTNiYmMtNDVmMC1hZjIwLTY0Mjc4ZWRmZDg1ZSIsImlhdCI6MTU2Njg1NTgwOSwiaXNzIjoiZGZ1c2UuaW8iLCJzdWIiOiJ1aWQ6MGJ1c3kzZDU5NGQyZjViOGU4MWRiIiwidXNnIjoic2VydmVyIiwiYWtpIjoiZGVmNDFkZDY5ZmFjMzMzNmI2NGYzYzQyNWM4MjNiNTdjZGQxMmNiMDVjZDVhNWU5ZjhkMGU1ZDg1MjljZGNlZCIsInRpZXIiOiJmcmVlLXYxIiwic3RibGsiOi0zNjAwLCJ2IjoxfQ.R8mGakbiqU_8ezF52l4Obz5gmuocXyv11eICedlbLYKMzDfVJkfYMk_iZ1FQWnMVw2387o1lyxIgh6yg78-tWQ"
 
-URL = f"wss://mainnet.eos.dfuse.io/v1/stream?token={K2}"
+URL = f"wss://mainnet.eos.dfuse.io/v1/stream"
 
 
 class DfuseWs:
@@ -63,15 +63,15 @@ class DfuseWs:
         self.wss_url = base_wss_url
 
     @asyncio.coroutine
-    def get(self, data: dict, request_id: str, request_type: str, type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0, origin: str='DFUSE-PY'):
+    def get(self, token, data: dict, request_id: str, request_type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0, origin: str = 'DFUSE-PY'):
 
         websocket = yield from websockets.connect(
-            self.wss_url, origin=origin)
+            f'{self.wss_url}?token={token}', origin=origin)
 
         try:
 
             payload = {
-                "type": type,
+                "type": request_type,
                 "listen": listen,
                 "req_id": request_id,
                 "irreversible_only": irreversible_only,
@@ -81,13 +81,14 @@ class DfuseWs:
             yield from websocket.send(json.dumps(payload))
             while True:
                 response = yield from websocket.recv()
-                print("{}".format(response))
+                print(f"{response}")
 
         finally:
             yield from websocket.close()
 
-    def run(self, data: dict, request_id: str, request_type: str, type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0):
-        asyncio.get_event_loop().run_until_complete(self.get(data, request_id, request_type, type, listen, irreversible_only, fetch, with_progress))
+    def run(self, token,  data: dict, request_id: str, request_type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 5):
+        asyncio.get_event_loop().run_until_complete(self.get(token, data, request_id,
+                                                             request_type, listen, irreversible_only, fetch, with_progress))
 
 
 dws = DfuseWs()

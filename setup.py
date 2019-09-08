@@ -17,8 +17,8 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='dfuse-python',
-    packages=['dfuse-python'],
+    name='dfuse',
+    packages=['dfuse'],
     version='0.0.1',
     description='Python wrapper around the dfuse.io API.',
     author='Cheese',
@@ -32,15 +32,15 @@ setup(
     install_requires=[
         'requests>=2.22.0',
         'requests_cache>=0.5.2',
-        'websockets'='8.0.2',
-        'grpcio'="1.23.0,
-        'grpcio-tools'='1.23.0',
-        'python-decouple'='3.1',
+        'websockets>=8.0.2',
+        'grpcio>=1.23.0',
+        'grpcio-tools>=1.23.0',
+        'python-decouple>=3.1',
     ],
     keywords=['EOSIO', 'API', 'dfuse'],
     classifiers=[
-        'License :: OSI Approved :: MIT Software License',
-        'Development Status :: 1 - Production/Stable',
+        'License :: OSI Approved :: MIT License',
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
