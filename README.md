@@ -1,6 +1,15 @@
 
 **dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x and Python 3.7.x.
 
+## INSTALLATION
+
+```bash
+
+    $ pipenv install dfuse
+```
+    
+- It is important that you do this from a virtual environment.
+
 
 ## Prerequisites
 
