@@ -14,10 +14,10 @@ import requests_cache
 from decouple import config
 
 from dfuse.db import persist
-from dfuse.models import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
-                    DfuseError, KeyAccountsType, MultiStateType,
-                    PermissionLinkType, StateTableRowType, StateType,
-                    TableScopeType, TransactionLifecycle)
+from dfuse.dftypes import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
+                           DfuseError, KeyAccountsType, MultiStateType,
+                           PermissionLinkType, StateTableRowType, StateType,
+                           TableScopeType, TransactionLifecycle)
 from dfuse.ws import dws
 
 
