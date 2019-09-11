@@ -15,9 +15,6 @@ grpcio-tools = "*"
 requests = "*"
 requests-cache = "*"
 python-decouple = "*"
-autopep8 = "*"
-dfuse = "*"
-twine = "*"
 
 [requires]
 python_version = "3.7"
