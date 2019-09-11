@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
+ipython = "*"
 
 [packages]
 websockets = "*"
@@ -15,6 +16,8 @@ requests = "*"
 requests-cache = "*"
 python-decouple = "*"
 autopep8 = "*"
+dfuse = "*"
+twine = "*"
 
 [requires]
 python_version = "3.7"
