@@ -4,6 +4,8 @@
 # To use a consistent encoding
 from os import path
 from codecs import open
+from setuptools import find_packages, setup
+
 # Always prefer setuptools over distutils
 try:
     from setuptools import setup
@@ -18,8 +20,8 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='dfuse',
-    packages=['dfuse'],
-    version='0.0.1',
+    packages=find_packages(),
+    version='0.0.3',
     description='Python wrapper around the dfuse.io API.',
     author='Cheese',
     author_email='ch33s3codes@gmail.com',
