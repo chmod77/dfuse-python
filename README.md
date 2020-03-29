@@ -1,5 +1,5 @@
 
-**dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x and Python 3.7.x.
+**dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x, 3.7.x and 3.8.x.
 
 ## INSTALLATION
 
@@ -510,6 +510,17 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```
 
 #### **`GET /v0/state/table/accounts`**
+- **`Description`** 
+    
+    Fetches the state of any table, at any block height.
+
+    The block_num parameter determines for which block you want a table snapshot. This can be anywhere in the chain’s history.
+
+    If the requested block_num is irreversible, you will get an immutable snapshot. If the block_num is still in a reversible chain, you will get a full consistent snapshot, but it is not guaranteed to pass irreversibility. Inspect the returned up_to_block_id parameter to understand from which longest chain the returned value is a snapshot of.
+                    
+
+- **`Types`** 
+
     
     TODO
 
