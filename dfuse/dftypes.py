@@ -1,4 +1,6 @@
-# Defines the Dfuse Object types
+"""
+Defines the Dfuse Object types
+"""
 import datetime
 from typing import List
 
