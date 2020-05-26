@@ -1,23 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+"""
+Dfuse Core Implementation
+"""
 
 import datetime
-import json as js
+import json
 import os
 import sqlite3
 import tempfile
 from typing import Any, Dict, Sequence
 from urllib.parse import urlencode
+
 import requests
 import requests_cache
 from decouple import config
 
 from dfuse.db import persist
-from dfuse.dftypes import (ABIType, AuthTokenType, Bin2JSONType, BlockTimeStampType,
-                           DfuseError, KeyAccountsType, MultiStateType,
-                           PermissionLinkType, StateTableRowType, StateType,
-                           TableScopeType, TransactionLifecycle)
+from dfuse.dftypes import (ABIType, AuthTokenType, Bin2JSONType,
+                           BlockTimeStampType, DfuseError, KeyAccountsType,
+                           MultiStateType, PermissionLinkType,
+                           StateTableRowType, StateType, TableScopeType,
+                           TransactionLifecycle)
 from dfuse.ws import dws
 
 
@@ -26,7 +30,11 @@ class Dfuse:
     __DEFAULT_BASE_URL: str = config('BASE_URL')
     __DEFAULT_TIMEOUT: int = 30
     __TEMPDIR_CACHE: bool = True
-    def __UNIXTIMESTAMP(n): return datetime.datetime.fromtimestamp(n)  # TO-USE
+
+    def __UNIXTIMESTAMP(timestamp_):
+        return datetime.datetime.fromtimestamp(
+            timestamp_)  # TO-USE
+
     __BLOCK_TIME_URL: str = config(
         'BLOCK_TIME_URL')
     __TRX_URL: str = config(
@@ -180,9 +188,11 @@ class Dfuse:
         '''
         Fetches the block ID, time and block number for the given timestamp.
 
-        (Beta) GET /v0/block_id/by_time/by_time?time=2019-03-04T10:36:14.5Z&comparator=gte: Get the block ID produced at a given time.
+        (Beta) GET /v0/block_id/by_time/by_time?time=2019-03-04T10:36:14.5Z&comparator=gte: 
+        Get the block ID produced at a given time.
 
-        Defaults to 1 day earlier, if no `time` is supplied, i.e `datetime.datetime.now() - datetime.timedelta(1)`.
+        Defaults to 1 day earlier, if no `time` is supplied, i.e 
+        `datetime.datetime.now() - datetime.timedelta(1)`.
 
         Response:
         ```
