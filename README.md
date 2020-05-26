@@ -66,7 +66,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 >>> obj = dfuse_.get_block_at_timestamp(time=datetime.datetime.now()-datetime.timedelta(1), comparator='gte')
 >>> obj
 
-<models.BlockTimeStampType at 0x7f7201b35860>
+<dfuse.dftypes.BlockTimeStampType at 0x7fe611dca100>
 
 >>> obj.data
 
@@ -99,7 +99,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <models.TransactionLifecycle at 0x7f72024effd0>
+    <dfuse.dftypes.TransactionLifecycle at 0x7fe611c55790>
 
 
 >>> obj.data
@@ -229,7 +229,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <models.ABIType at 0x7f54dc041828>
+    <dfuse.dftypes.ABIType at 0x7f54dc041828>
 
 >>> obj.data
 
@@ -318,7 +318,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <models.Bin2JSONType at 0x7f54c4763908>
+    <dfuse.dftypes.Bin2JSONType at 0x7f54c4763908>
 
 >>> obj.data
 
@@ -371,7 +371,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <models.KeyAccountsType at 0x7f54c7169be0>
+    <dfuse.dftypes.KeyAccountsType at 0x7f54c7169be0>
 
 >>> obj.data
 
@@ -413,7 +413,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <models.PermissionLinkType at 0x7f54c7501c50>
+   <dfuse.dftypes.PermissionLinkType at 0x7f54c7501c50>
 
 >>> obj.data
 
@@ -491,7 +491,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <models.StateType at 0x7f54c711f908>
+    <dfuse.dftypes.StateType at 0x7f54c711f908>
 
 >>> obj.data
 
@@ -509,7 +509,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 ```
 
-#### **`GET /v0/state/table/accounts`**
+#### **`GET /v0/state/tables/accounts`**
 - **`Description`** 
     
     Fetches the state of any table, at any block height.
@@ -520,11 +520,112 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
                     
 
 - **`Types`** 
+ - ```account``` - string (required), separated by |
+
+    - ```scope``` - The name-encoded scope of the table you are requesting. (required)
+
+    - ```table``` - table name you want to retrieve (required)
+
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+
+    - ```json```  - boolean (optional, defaults to false)
 
     
-    TODO
+```python
 
--  **GET** ```/v0/state/table/scopes```: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
+>>> from dfuse import Dfuse
+
+>>> df = Dfuse()
+
+>>> obj = df.get_table_accounts(accounts="eosadddddddd|tokenbyeocat|ethsidechain|epraofficial|alibabapoole|hirevibeshvt|oo1122334455|irespotokens|publytoken11|parslseed123|trybenetwork|zkstokensr4u", scope="b1", table="accounts", block_num=45000000, json="true")
+
+>>> obj
+
+    <dfuse.dftypes.MultiStateType at 0x7fe61111d820>
+
+>>> obj.data
+
+
+      {'last_irreversible_block_id': '',
+        'last_irreversible_block_num': 0,
+        'tables': [{'account': 'tokenbyeocat', 'scope': 'b1', 'rows': []},
+        {'account': 'irespotokens', 'scope': 'b1', 'rows': []},
+        {'account': 'parslseed123', 'scope': 'b1', 'rows': []},
+        {'account': 'trybenetwork', 'scope': 'b1', 'rows': []},
+        {'account': 'ethsidechain',
+        'scope': 'b1',
+        'rows': [{'key': '......2cel2o5',
+            'payer': 'eos1kissgirl',
+            'json': {'balance': '2000.0001 EETH'}}]},
+        {'account': 'oo1122334455',
+        'scope': 'b1',
+   'rows': [{'key': '......2ndxc4d',
+     'payer': 'guztemzzgyge',
+     'json': {'balance': '4550.0000 IPOS'}}]},
+     'tables': [{'account': 'tokenbyeocat', 'scope': 'b1', 'rows': []},
+  {'account': 'irespotokens', 'scope': 'b1', 'rows': []},
+  {'account': 'parslseed123', 'scope': 'b1', 'rows': []},
+  {'account': 'trybenetwork', 'scope': 'b1', 'rows': []},
+  {'account': 'ethsidechain',
+   'scope': 'b1',
+   'rows': [{'key': '......2cel2o5',
+     'payer': 'eos1kissgirl',
+     'json': {'balance': '2000.0001 EETH'}}]},
+  {'account': 'oo1122334455',
+   'scope': 'b1',
+   'rows': [{'key': '......2ndxc4d',
+     'payer': 'guztemzzgyge',
+     'json': {'balance': '4550.0000 IPOS'}}]},
+```
+
+
+
+**GET** ```/v0/state/tables/scopes```: Fetching snapshots of any table on the blockchain, at any block height, for a list of scopes for a given account (contract).
+
+- **`Description`** 
+    
+    Fetches all rows for a table in a given contract for a group of scopes, at any block heigh
+
+    Most parameters are similar to the /v0/state/table request, except for the scopes parameter, which accepts a list of name-encoded scopes separated by the pipe character (|).
+
+    The output format is slightly different too.
+                    
+
+- **`Types`** 
+
+    - ```account``` - string (required)
+
+    - ```scope``` - The name-encoded scope of the table you are requesting. (required)
+
+    - ```table``` - table name you want to retrieve (required)
+
+    - ```block_num``` - int (Optional - defaults to ```head block num```)
+
+    - ```json```  - boolean (optional, defaults to false)
+
+    - ```key_type``` - How to represent the row keys in the returned table. string (optional, defaults to `name`) 
+
+    - Valid `key_type`s:
+                    
+        - `name` (default) for EOS name-encoded base32 representation of the row key
+        - `hex` for hexadecimal encoding, ex: abcdef1234567890
+        - `hex_be` for big endian hexadecimal encoding, ex: 9078563412efcdab
+        - `uint64` for string encoded uint64
+
+    - ```with_block_num``` - Optional, Boolean. Defaults to false | Will return one `block_num` with each row. Represents the block at which that row was last changed.
+
+    - ```with_abi``` - Boolean     Defaults to false | Return the ABI in effect at block `block_num`.
+
+            
+- **`Optional parameters:`**
+    - ```block_num```
+    - ```json```
+    - ```key_type```
+    - ```with_block_num```
+    - ```with_abi```
+
+
+
 
 -  **GET** ```/v0/search/transactions```: Structure Query Engine (SQE), for searching the whole blockchain history and get fast and precise results.
 
