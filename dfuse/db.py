@@ -1,9 +1,13 @@
+"""
+Dfuse DB Connection Module
+"""
+
 import sqlite3
-import tempfile
 from sqlite3 import Error
-import datetime
 from typing import Any
+
 DB_NAME: str = 'dfusepy.sqlite3'
+
 CREATE_TBL_SQL = """
                 CREATE TABLE IF NOT EXISTS tokens (token TEXT, 
                 created TIMESTAMP)
@@ -23,8 +27,8 @@ class DfusePersist:
             conn = sqlite3.connect(
                 db_file, detect_types=sqlite3.PARSE_DECLTYPES)
             return conn
-        except Error as e:
-            print(e)
+        except Error as error:
+            print(error)
             return None
 
     def create_table(self, conn, sql: str = CREATE_TBL_SQL) -> Any:
@@ -36,15 +40,15 @@ class DfusePersist:
         try:
             c = conn.cursor()
             c.execute(sql)
-        except Error as e:
-            print(e)
+        except Error as error:
+            print(error)
         return None
         # finally:
         #     conn.close()
 
     def insert_token(self, conn, data: tuple) -> Any:
         """
-        Create a new token into the tokens table
+        Create a new token and insert it into the tokens table
         :param conn:
         :param data:
         :return: token
@@ -57,6 +61,9 @@ class DfusePersist:
         return cur.lastrowid
 
     def drop_entries(self, conn) -> Any:
+        """
+        Deletes all entries from the tokens table.
+        """
         if conn:
             sql = 'DELETE FROM tokens'
             cur = conn.cursor()
