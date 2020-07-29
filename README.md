@@ -1,11 +1,15 @@
 
-**dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x, 3.7.x and 3.8.x.
+**dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x, 3.7.x 3.8.x and 3.9.x.
 
-## INSTALLATION
+## Installation
+From source use:
+
+    $ python setup.py install
+
+or install from PyPi:
 
 ```bash
-
-    $ pipenv install dfuse
+$ pipenv install dfuse
 ```
     
 - It is important that you do this from a virtual environment.
@@ -13,33 +17,31 @@
 
 ## Prerequisites
 
-   To get up and rolling, create a .env or .ini file in the project folder, with contents copied from the example.env file. (as required by [python decouple](https://pypi.org/project/python-decouple/))
+   To get up and rolling, create a .env or .ini file in the project folder, with contents copied from the `example.env` file. (as required by [python decouple](https://pypi.org/project/python-decouple/))
 
    Make sure to substitute the predefined keys with the appropriate ones.
 
    ```API_KEY = YOUR_API_KEY_HERE```
 
-   ```BASE_URL = https://mainnet.eos.dfuse.io``` 
-   
-    (Here you can specify either https://mainnet.eos.dfuse.io or https://worbli.eos.dfuse.io 
-                    
-    or https://kylin.eos.dfuse.io or https://jungle.eos.dfuse.io.)
+   ```EOS_BASE_URL = https://mainnet.eos.dfuse.io``` 
+
+   ```EOS_BLOCK_TIME_URL = /v0/block_id/by_time```
+
+   ```EOS_TRX_URL = /v0/transactions```
+
+   ```EOS_STATE_BASE_URL = /v0/state```
+
+**ENSURE NO trailing slash at the end of the *BASE_URL**
 
 
-**ENSURE NO trailing slash at the end of the BASE_URL**
-
-
-   ```BLOCK_TIME_URL = /v0/block_id/by_time```
-
-   ```TRX_URL = /v0/transactions```
-
-   ```STATE_BASE_URL = /v0/state```
+   (You can specify either https://mainnet.eos.dfuse.io or https://worbli.eos.dfuse.io 
+                    or https://kylin.eos.dfuse.io or https://jungle.eos.dfuse.io.) for the `EOS_BASE_URL`
 
    You can also define these values as environment variables.
 
 If the dfuse API is upgraded to another version, say v1, it is easier to switch to that with minimal changes. You only edit your .env file to match the changes.
 
-### JWT Caching
+## JWT Caching
 
 Short-time lived JWT Tokens are persisted on a local sqlite3 database, and are usable for upto 22 hours.
 
@@ -114,7 +116,8 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
         'max_cpu_usage_ms': 0,
         'delay_sec': 0,
         'context_free_actions': [],
-        'actions': [{'account': 'maouehmaoueh',
+        'actions': [{
+            'account': 'maouehmaoueh',
             'name': 'cfainline',
             'authorization': [{'actor': 'maouehmaoueh', 'permission': 'active'}],
             'hex_data': '03313233'}],
@@ -545,7 +548,6 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj.data
 
-
       {'last_irreversible_block_id': '',
         'last_irreversible_block_num': 0,
         'tables': [{'account': 'tokenbyeocat', 'scope': 'b1', 'rows': []},
@@ -563,19 +565,19 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
      'payer': 'guztemzzgyge',
      'json': {'balance': '4550.0000 IPOS'}}]},
      'tables': [{'account': 'tokenbyeocat', 'scope': 'b1', 'rows': []},
-  {'account': 'irespotokens', 'scope': 'b1', 'rows': []},
-  {'account': 'parslseed123', 'scope': 'b1', 'rows': []},
-  {'account': 'trybenetwork', 'scope': 'b1', 'rows': []},
-  {'account': 'ethsidechain',
-   'scope': 'b1',
-   'rows': [{'key': '......2cel2o5',
-     'payer': 'eos1kissgirl',
-     'json': {'balance': '2000.0001 EETH'}}]},
-  {'account': 'oo1122334455',
-   'scope': 'b1',
-   'rows': [{'key': '......2ndxc4d',
-     'payer': 'guztemzzgyge',
-     'json': {'balance': '4550.0000 IPOS'}}]},
+        {'account': 'irespotokens', 'scope': 'b1', 'rows': []},
+        {'account': 'parslseed123', 'scope': 'b1', 'rows': []},
+        {'account': 'trybenetwork', 'scope': 'b1', 'rows': []},
+        {'account': 'ethsidechain',
+        'scope': 'b1',
+        'rows': [{'key': '......2cel2o5',
+            'payer': 'eos1kissgirl',
+            'json': {'balance': '2000.0001 EETH'}}]},
+        {'account': 'oo1122334455',
+        'scope': 'b1',
+        'rows': [{'key': '......2ndxc4d',
+            'payer': 'guztemzzgyge',
+            'json': {'balance': '4550.0000 IPOS'}}]},
 ```
 
 
