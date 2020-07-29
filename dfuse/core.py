@@ -5,6 +5,7 @@ Dfuse Core Implementation
 """
 
 import datetime
+from datetime import time
 import json
 import os
 import sqlite3
@@ -42,7 +43,7 @@ class Dfuse:
 
     def __UNIXTIMESTAMP(timestamp_):
         return datetime.datetime.fromtimestamp(timestamp_)  # TO-USE
-
+   
     __BLOCK_TIME_URL: str = config("BLOCK_TIME_URL")
     __TRX_URL: str = config("TRX_URL")
     __STATE_BASE_URL: str = config("STATE_BASE_URL")
