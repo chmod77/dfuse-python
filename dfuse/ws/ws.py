@@ -1,6 +1,7 @@
 import asyncio
-import websockets
 import json
+
+import websockets
 from decouple import config
 
 URL = config('WSS_URL')
