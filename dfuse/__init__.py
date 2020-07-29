@@ -8,4 +8,5 @@ __repo__ = "https://github.com/th3ch33s3/dfuse-python"
 __license__ = "MIT License"
 
 
-from .core import Dfuse
+from .eosio import Eosio
+from .eth import Eth
