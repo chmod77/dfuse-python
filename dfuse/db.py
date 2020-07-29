@@ -6,7 +6,7 @@ import sqlite3
 from sqlite3 import Error
 from typing import Any
 
-DB_NAME: str = 'dfusepy.sqlite3'
+DB_NAME: str = "dfusepy.sqlite3"
 
 CREATE_TBL_SQL = """
                 CREATE TABLE IF NOT EXISTS tokens (token TEXT, 
@@ -24,8 +24,7 @@ class DfusePersist:
     def create_connection(self, db_file=DB_NAME) -> Any:
         """ create a database connection to a SQLite database """
         try:
-            conn = sqlite3.connect(
-                db_file, detect_types=sqlite3.PARSE_DECLTYPES)
+            conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES)
             return conn
         except Error as error:
             print(error)
@@ -65,7 +64,7 @@ class DfusePersist:
         Deletes all entries from the tokens table.
         """
         if conn:
-            sql = 'DELETE FROM tokens'
+            sql = "DELETE FROM tokens"
             cur = conn.cursor()
             cur.execute(sql)
             conn.commit()

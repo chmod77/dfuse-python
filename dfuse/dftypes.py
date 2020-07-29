@@ -12,6 +12,7 @@ class Name:
     It can only include characters a through z and/or numbers from 1 to 5, and the dot . character. It has a maximum length of 12 or 13 characters (depending on the contents).
 
     """
+
     pass
 
 
@@ -25,6 +26,7 @@ class ActionName(Name):
     """    
     An ActionName is a Name-encoded string that represents a contract’s action.
     """
+
     pass
 
 
@@ -32,6 +34,7 @@ class PermissionName(Name):
     """    
     A PermissionName is a Name-encoded string that represents a valid permission on the chain.
     """
+
     pass
 
 
@@ -39,6 +42,7 @@ class TableName(Name):
     """
     A TableName is a Name-encoded string that represents a contract’s table on the chain.
     """
+
     pass
 
 
@@ -46,6 +50,7 @@ class PublicKey:
     """
     A public key is the publicly known portion of the private key/public key pair that a user can generate.
     """
+
     pass
 
 
@@ -122,10 +127,21 @@ class TableSnapshotType:
 
 
 class Transaction:
-    def __init__(self, expiration, ref_block_num,
-                 ref_block_prefix, max_net_usage_words=0,
-                 max_cpu_usage_ms=0, delay_sec=0, context_free_actions=[],
-                 actions=[], transaction_extensions=[], signatures=[], context_free_data=[], **kwargs):
+    def __init__(
+        self,
+        expiration,
+        ref_block_num,
+        ref_block_prefix,
+        max_net_usage_words=0,
+        max_cpu_usage_ms=0,
+        delay_sec=0,
+        context_free_actions=[],
+        actions=[],
+        transaction_extensions=[],
+        signatures=[],
+        context_free_data=[],
+        **kwargs
+    ):
         self.expiration = expiration
         self.ref_block_num = ref_block_num
         self.ref_block_prefix = ref_block_prefix
@@ -140,7 +156,20 @@ class Transaction:
 
 
 class TransactionTrace:
-    def __init__(self, id, block_num, block_time, producer_block_id, receipt, elapsed, net_usage, scheduled=False, action_traces=[], failed_dtrx_trace=None, **kwargs):
+    def __init__(
+        self,
+        id,
+        block_num,
+        block_time,
+        producer_block_id,
+        receipt,
+        elapsed,
+        net_usage,
+        scheduled=False,
+        action_traces=[],
+        failed_dtrx_trace=None,
+        **kwargs
+    ):
         self.id = id
         self.block_num = block_num
         self.block_time = block_time
@@ -151,18 +180,30 @@ class TransactionTrace:
         self.scheduled = scheduled
         self.action_traces = action_traces
         self.failed_dtrx_trace = failed_dtrx_trace
-        self.except_ = kwargs.get('except')
+        self.except_ = kwargs.get("except")
 
 
 class TransactionLifecycle:
-    def __init__(self, id: str,
-                 transaction_status: str, transaction: Transaction,
-                 execution_trace: TransactionTrace, execution_block_header: BlockHeader = None,
-                 creation_tree: CreationTree = None, dtrxops: List[DTrxOp] = None, dbops: List[DBOp] = None,
-                 ramops: List[RAMOp] = None, tableops: List[TableOp] = None,
-                 pub_keys: List[str] = None, created_by: ExtDTrxop = None, canceled_by: ExtDTrxop = None,
-                 execution_irreversible: bool = None,
-                 creation_irreversible: bool = None, cancelation_irreversible: bool = None, **kwargs):
+    def __init__(
+        self,
+        id: str,
+        transaction_status: str,
+        transaction: Transaction,
+        execution_trace: TransactionTrace,
+        execution_block_header: BlockHeader = None,
+        creation_tree: CreationTree = None,
+        dtrxops: List[DTrxOp] = None,
+        dbops: List[DBOp] = None,
+        ramops: List[RAMOp] = None,
+        tableops: List[TableOp] = None,
+        pub_keys: List[str] = None,
+        created_by: ExtDTrxop = None,
+        canceled_by: ExtDTrxop = None,
+        execution_irreversible: bool = None,
+        creation_irreversible: bool = None,
+        cancelation_irreversible: bool = None,
+        **kwargs
+    ):
         self.id = id
         self.transaction_status = transaction_status
         self.transaction = Transaction(**transaction)
@@ -178,91 +219,83 @@ class TransactionLifecycle:
         self.execution_irreversible = execution_irreversible
         self.creation_irreversible = creation_irreversible
         self.cancelation_irreversible = cancelation_irreversible
-        self.data=self.__dict__
+        self.data = self.__dict__
 
 
 class ABIType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.block_num = kwargs.get('block_num')
-        self.account = kwargs.get('account')
-        self.abi = kwargs.get('abi')
+        self.block_num = kwargs.get("block_num")
+        self.account = kwargs.get("account")
+        self.abi = kwargs.get("abi")
 
 
 class Bin2JSONType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.block_num = kwargs.get('block_num')
-        self.account = kwargs.get('account')
-        self.table = kwargs.get('table')
-        self.rows = kwargs.get('rows')
+        self.block_num = kwargs.get("block_num")
+        self.account = kwargs.get("account")
+        self.table = kwargs.get("table")
+        self.rows = kwargs.get("rows")
 
 
 class KeyAccountsType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.block_num = kwargs.get('block_num')
-        self.account_names = kwargs.get('account_names')
+        self.block_num = kwargs.get("block_num")
+        self.account_names = kwargs.get("account_names")
 
 
 class PermissionLinkType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.up_to_block_id = kwargs.get('up_to_block_id')
-        self.up_to_block_num = kwargs.get('up_to_block_num')
-        self.last_irreversible_block_id = kwargs.get(
-            'last_irreversible_block_id')
-        self.last_irreversible_block_num = kwargs.get(
-            'last_irreversible_block_num')
-        self.linked_permissions = kwargs.get('linked_permissions')
+        self.up_to_block_id = kwargs.get("up_to_block_id")
+        self.up_to_block_num = kwargs.get("up_to_block_num")
+        self.last_irreversible_block_id = kwargs.get("last_irreversible_block_id")
+        self.last_irreversible_block_num = kwargs.get("last_irreversible_block_num")
+        self.linked_permissions = kwargs.get("linked_permissions")
 
 
 class StateType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.up_to_block_id = kwargs.get('up_to_block_id')
-        self.up_to_block_num = kwargs.get('up_to_block_num	')
-        self.last_irreversible_block_id = kwargs.get(
-            'last_irreversible_block_id')
-        self.last_irreversible_block_num = kwargs.get(
-            'last_irreversible_block_num')
-        self.abi = kwargs.get('abi')
-        self.rows = kwargs.get('rows')
+        self.up_to_block_id = kwargs.get("up_to_block_id")
+        self.up_to_block_num = kwargs.get("up_to_block_num	")
+        self.last_irreversible_block_id = kwargs.get("last_irreversible_block_id")
+        self.last_irreversible_block_num = kwargs.get("last_irreversible_block_num")
+        self.abi = kwargs.get("abi")
+        self.rows = kwargs.get("rows")
 
 
 class StateTableRowType:
     def __init__(self, *args, **kwargs):
         self.data = kwargs
-        self.last_irreversible_block_id = kwargs.get(
-            'last_irreversible_block_id')
-        self.last_irreversible_block_num = kwargs.get(
-            'last_irreversible_block_num')
-        self.row = kwargs.get('row')
+        self.last_irreversible_block_id = kwargs.get("last_irreversible_block_id")
+        self.last_irreversible_block_num = kwargs.get("last_irreversible_block_num")
+        self.row = kwargs.get("row")
 
 
 class TableScopeType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.block_num = kwargs.get('block_num')
-        self.scopes = kwargs.get('scopes')
+        self.block_num = kwargs.get("block_num")
+        self.scopes = kwargs.get("scopes")
 
 
 class MultiStateType:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.up_to_block_id = kwargs.get('up_to_block_id')
-        self.up_to_block_num = kwargs.get('up_to_block_num')
-        self.last_irreversible_block_id = kwargs.get(
-            'last_irreversible_block_id')
-        self.last_irreversible_block_num = kwargs.get(
-            'last_irreversible_block_num')
-        self.abi = kwargs.get('abi')
-        self.tables = kwargs.get('tables')
+        self.up_to_block_id = kwargs.get("up_to_block_id")
+        self.up_to_block_num = kwargs.get("up_to_block_num")
+        self.last_irreversible_block_id = kwargs.get("last_irreversible_block_id")
+        self.last_irreversible_block_num = kwargs.get("last_irreversible_block_num")
+        self.abi = kwargs.get("abi")
+        self.tables = kwargs.get("tables")
 
 
 class DfuseError:
     def __init__(self, **kwargs):
         self.data = kwargs
-        self.code = kwargs.get('code')
-        self.trace_id = kwargs.get('trace_id')
-        self.message = kwargs.get('message')
+        self.code = kwargs.get("code")
+        self.trace_id = kwargs.get("trace_id")
+        self.message = kwargs.get("message")

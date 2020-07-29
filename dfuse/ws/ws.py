@@ -4,7 +4,7 @@ import json
 import websockets
 from decouple import config
 
-URL = config('WSS_URL')
+URL = config("WSS_URL")
 
 
 class DfuseWs:
@@ -61,10 +61,22 @@ class DfuseWs:
         self.wss_url = base_wss_url
 
     @asyncio.coroutine
-    def get(self, token, data: dict, request_id: str, request_type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 0, origin: str = 'DFUSE-PY'):
+    def get(
+        self,
+        token,
+        data: dict,
+        request_id: str,
+        request_type: str = "get_action_traces",
+        listen: bool = False,
+        irreversible_only: bool = False,
+        fetch: bool = False,
+        with_progress: int = 0,
+        origin: str = "DFUSE-PY",
+    ):
 
         websocket = yield from websockets.connect(
-            f'{self.wss_url}?token={token}', origin=origin)
+            f"{self.wss_url}?token={token}", origin=origin
+        )
 
         try:
 
@@ -73,7 +85,7 @@ class DfuseWs:
                 "listen": listen,
                 "req_id": request_id,
                 "irreversible_only": irreversible_only,
-                "data": data
+                "data": data,
             }
 
             yield from websocket.send(json.dumps(payload))
@@ -84,9 +96,29 @@ class DfuseWs:
         finally:
             yield from websocket.close()
 
-    def run(self, token,  data: dict, request_id: str, request_type: str = 'get_action_traces', listen: bool = False, irreversible_only: bool = False, fetch: bool = False, with_progress: int = 5):
-        asyncio.get_event_loop().run_until_complete(self.get(token, data, request_id,
-                                                             request_type, listen, irreversible_only, fetch, with_progress))
+    def run(
+        self,
+        token,
+        data: dict,
+        request_id: str,
+        request_type: str = "get_action_traces",
+        listen: bool = False,
+        irreversible_only: bool = False,
+        fetch: bool = False,
+        with_progress: int = 5,
+    ):
+        asyncio.get_event_loop().run_until_complete(
+            self.get(
+                token,
+                data,
+                request_id,
+                request_type,
+                listen,
+                irreversible_only,
+                fetch,
+                with_progress,
+            )
+        )
 
 
 dws = DfuseWs()
