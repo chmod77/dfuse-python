@@ -268,7 +268,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Eosio
 >>> eosio = Eosio()
->>> obj = dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
+>>> obj = eosio.fetch_abi(account='arbarotokenn', block_num=57202657)
 
 >>> obj
 
@@ -357,7 +357,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Eosio
 >>> eosio = Eosio()
->>> obj = dfuse_.bin_to_json(account='eosio.token', table='accounts',  hex_rows=["aa2c0b010000000004454f5300000000"], block_num=2600000)
+>>> obj = eosio.bin_to_json(account='eosio.token', table='accounts',  hex_rows=["aa2c0b010000000004454f5300000000"], block_num=2600000)
 
 >>> obj
 
@@ -410,7 +410,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> from dfuse import Eosio
 >>> eosio = Eosio()
->>> obj = dfuse_.get_key_accounts(public_key='EOS744heXNxjLamUjLxaLpn6gREh3CVf5VvFESq9sG969VmcNYyq6')
+>>> obj = eosio.get_key_accounts(public_key='EOS744heXNxjLamUjLxaLpn6gREh3CVf5VvFESq9sG969VmcNYyq6')
 
 >>> obj
 
@@ -452,7 +452,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 ```python
 >>> from dfuse import Eosio
 >>> eosio = Eosio()
->>> obj = dfuse_.get_permission_links(account='eoscanadacom', block_num=25000000)  
+>>> obj = eosio.get_permission_links(account='eoscanadacom', block_num=25000000)  
 
 >>> obj
 
@@ -530,7 +530,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> from dfuse import Eosio
 >>> eosio = Eosio()
->>> obj = dfuse_.get_table(account='eosio.token', scope='greenunicorn', table='accounts', block_num=74000000) 
+>>> obj = eosio.get_table(account='eosio.token', scope='greenunicorn', table='accounts', block_num=74000000) 
 
 >>> obj
 
