@@ -1,5 +1,5 @@
 
-**dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x, 3.7.x 3.8.x and 3.9.x.
+**dfuse** is an open source library written in Python providing an easy to use wrapper around the [dfuse.io](https://dfuse.io/) API. This library has been tested with Python 3.6.x, 3.7.x 3.8.x.
 
 ## Installation
 From source use:
