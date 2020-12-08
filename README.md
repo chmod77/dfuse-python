@@ -578,7 +578,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> from dfuse import Eosio
 
->>> df = Dfuse()
+>>> eosio = Eosio()
 
 >>> obj = df.get_table_accounts(accounts="eosadddddddd|tokenbyeocat|ethsidechain|epraofficial|alibabapoole|hirevibeshvt|oo1122334455|irespotokens|publytoken11|parslseed123|trybenetwork|zkstokensr4u", scope="b1", table="accounts", block_num=45000000, json="true")
 
