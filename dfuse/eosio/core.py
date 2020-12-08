@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from decouple import config
-
 import datetime
-from datetime import time
+from dfuse.ws.ws import dws
 import json
 import os
 import sqlite3
 import tempfile
+from datetime import time
 from typing import Any, Dict, Sequence
 from urllib.parse import urlencode
 
 import requests
 import requests_cache
-from dfuse.utils.db import persist
+from decouple import config
 from dfuse.eosio.types import (
     ABIType,
     AuthTokenType,
@@ -28,6 +27,7 @@ from dfuse.eosio.types import (
     TableScopeType,
     TransactionLifecycle,
 )
+from dfuse.utils.db import persist
 
 """
 Dfuse EOSIO Implementation
@@ -241,6 +241,7 @@ class Eosio:
         if r.status_code == requests.codes.ok:
             response = BlockTimeStampType(**r.json())
         else:
+            print(r.text)
             response = DfuseError(**r.json())
         return response
 
@@ -613,5 +614,26 @@ class Eosio:
     """
 
     # WEBSOCKETS
+    def listen_websocket(
+        self,
+        data: dict,
+        request_id: str,
+        request_type: str = "get_action_traces",
+        listen: bool = False,
+        irreversible_only: bool = False,
+        fetch: bool = False,
+        with_progress: int = 5,
+    ):
+
+        dws.run(
+            self.token,
+            data,
+            request_id,
+            request_type,
+            listen,
+            irreversible_only,
+            fetch,
+            with_progress,
+        )
 
     # GRAPHQL via grpc
