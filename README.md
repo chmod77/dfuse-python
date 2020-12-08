@@ -23,7 +23,7 @@ $ pipenv install dfuse
 
    ```API_KEY = YOUR_API_KEY_HERE```
 
-   ```EOS_BASE_URL = https://mainnet.eos.dfuse.io``` 
+   ```EOS_BASE_URL = https://eos.dfuse.eosnation.io OR any of the REST Endpoints below``` 
 
    ```EOS_BLOCK_TIME_URL = /v0/block_id/by_time```
 
@@ -33,9 +33,48 @@ $ pipenv install dfuse
 
 **ENSURE NO trailing slash at the end of the *BASE_URL**
 
+ Supported list of EOSIO Networks (Endpoints):
 
-   (You can specify either https://mainnet.eos.dfuse.io or https://worbli.eos.dfuse.io 
-                    or https://kylin.eos.dfuse.io or https://jungle.eos.dfuse.io.) for the `EOS_BASE_URL`
+ 1. **EOS Mainnet**
+    
+    Chain ID: `aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906`
+
+    REST Endpoint: https://eos.dfuse.eosnation.io/
+
+    Websocket: wss://eos.dfuse.eosnation.io/v1/stream
+
+ 2. **EOSIO Testnet**
+
+    Chain ID: `0db13ab9b321c37c0ba8481cb4681c2788b622c3abfd1f12f0e5353d44ba6e72`
+
+    REST: https://testnet.eos.dfuse.io/
+
+    Websocket: wss://testnet.eos.dfuse.io/v1/stream
+
+    GraphQL: https://testnet.eos.dfuse.io/graphql
+
+ 3. **CryptoKylin**
+
+    Chain ID: `5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191`
+
+    REST	https://kylin.eos.dfuse.io/
+
+    WebSocket	wss://kylin.eos.dfuse.io/v1/stream
+
+    GraphQL	https://kylin.eos.dfuse.io/graphql 
+
+ 4. **WAX Mainnet**
+
+    Chain ID: `1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4`
+
+    REST	https://mainnet.wax.dfuse.io/
+
+    WebSocket	wss://mainnet.wax.dfuse.io/v1/stream
+
+    GraphQL	https://mainnet.wax.dfuse.io/graphql
+
+
+Use the `REST` endpoint values as your `EOS_BASE_URL`
 
    You can also define these values as environment variables.
 
@@ -62,22 +101,23 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 - You can access all the fields in the response by getting the `data` key, as shown in the following example.
 ```python
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
 >>> import datetime
->>> obj = dfuse_.get_block_at_timestamp(time=datetime.datetime.now()-datetime.timedelta(1), comparator='gte')
+>>> obj = eosio.get_block_at_timestamp(time=datetime.datetime.now()-datetime.timedelta(1), comparator='gte')
 >>> obj
 
-<dfuse.dftypes.BlockTimeStampType at 0x7fe611dca100>
+<dfuse.eosio.types.BlockTimeStampType at 0x7fcfc746abb0>
 
 >>> obj.data
 
-{'block': 
-    {
-        'id': '04763b536d8da0a1d7e10e666333b51efec16d5c5264a69f736acf37a14dec2b', 
-        'num': 74857299, 
-        'time': '2019-08-19T14:32:59Z'
-    }
+{
+    'block': 
+        {
+            'id': '095227fa85998bfefb6c474be42d8d6f1e890f152c7047570b8ababa73c12783',
+            'num': 156379130,
+            'time': '2020-12-07T10:37:15.5Z'
+        }
 }
 
 ```
@@ -95,13 +135,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     - None
 
 ```python
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
->>> obj = dfuse_.get_transaction_lifecycle(id='1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253')
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
+>>> obj = eosio.get_transaction_lifecycle(id='1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253')
 
 >>> obj
 
-    <dfuse.dftypes.TransactionLifecycle at 0x7fe611c55790>
+   <dfuse.eosio.types.TransactionLifecycle at 0x7fcfc747c3d0>
 
 
 >>> obj.data
