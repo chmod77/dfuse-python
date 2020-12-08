@@ -266,13 +266,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 
 ```python
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
 >>> obj = dfuse_.fetch_abi(account='arbarotokenn', block_num=57202657)
 
 >>> obj
 
-    <dfuse.dftypes.ABIType at 0x7f54dc041828>
+    <dfuse.eosio.types.ABIType at 0x7f54dc041828>
 
 >>> obj.data
 
@@ -355,13 +355,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     - ```block_num```
 
 ```python
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
 >>> obj = dfuse_.bin_to_json(account='eosio.token', table='accounts',  hex_rows=["aa2c0b010000000004454f5300000000"], block_num=2600000)
 
 >>> obj
 
-    <dfuse.dftypes.Bin2JSONType at 0x7f54c4763908>
+    <dfuse.eosio.types.Bin2JSONType at 0x7f54c4763908>
 
 >>> obj.data
 
@@ -408,13 +408,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 ```python
 
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
 >>> obj = dfuse_.get_key_accounts(public_key='EOS744heXNxjLamUjLxaLpn6gREh3CVf5VvFESq9sG969VmcNYyq6')
 
 >>> obj
 
-    <dfuse.dftypes.KeyAccountsType at 0x7f54c7169be0>
+    <dfuse.eosio.types.KeyAccountsType at 0x7f54c7169be0>
 
 >>> obj.data
 
@@ -450,13 +450,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 
 ```python
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
 >>> obj = dfuse_.get_permission_links(account='eoscanadacom', block_num=25000000)  
 
 >>> obj
 
-   <dfuse.dftypes.PermissionLinkType at 0x7f54c7501c50>
+   <dfuse.eosio.types.PermissionLinkType at 0x7f54c7501c50>
 
 >>> obj.data
 
@@ -528,13 +528,13 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 ```python
 
->>> from dfuse import Dfuse
->>> dfuse_ = Dfuse()
+>>> from dfuse import Eosio
+>>> eosio = Eosio()
 >>> obj = dfuse_.get_table(account='eosio.token', scope='greenunicorn', table='accounts', block_num=74000000) 
 
 >>> obj
 
-    <dfuse.dftypes.StateType at 0x7f54c711f908>
+    <dfuse.eosio.types.StateType at 0x7f54c711f908>
 
 >>> obj.data
 
@@ -576,7 +576,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
     
 ```python
 
->>> from dfuse import Dfuse
+>>> from dfuse import Eosio
 
 >>> df = Dfuse()
 
@@ -584,7 +584,7 @@ This API can currently retrieve the following data from [dfuse.io](https://dfuse
 
 >>> obj
 
-    <dfuse.dftypes.MultiStateType at 0x7fe61111d820>
+    <dfuse.eosio.types.MultiStateType at 0x7fe61111d820>
 
 >>> obj.data
 
