@@ -21,7 +21,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 setup(
     name="dfuse",
     packages=find_packages(),
-    version="0.0.7",
+    version="0.0.8",
     description="Python wrapper around the dfuse.io API.",
     author="chmod77",
     author_email="ch33s3codes@gmail.com",
@@ -49,6 +49,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     long_description=long_description,
