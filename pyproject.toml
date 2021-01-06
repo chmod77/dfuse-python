@@ -6,7 +6,7 @@ authors = ["chmodx <chmod777.ke@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.9"
 websockets = "^8.1"
 python-decouple = "^3.4"
 grpcio-tools = "^1.34.0"
