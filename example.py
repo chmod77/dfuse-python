@@ -1,6 +1,5 @@
 from ws import DfuseWs
 
-
 d = DfuseWs()
 
 payload = {
@@ -11,18 +10,26 @@ payload = {
     "data": {
         "accounts": "eosio.token",
         "action_name": "transfer",
-                       "with_inline_traces": True,
-                       "with_dtrxops": True,
-                       "with_ramops": True
-    }
+        "with_inline_traces": True,
+        "with_dtrxops": True,
+        "with_ramops": True,
+    },
 }
 data = {
     "accounts": "eosio.token",
     "action_name": "transfer",
     "with_inline_traces": True,
     "with_dtrxops": True,
-    "with_ramops": True
+    "with_ramops": True,
 }
 
-if __name__ == '__main__':
-    d.run(data=data, request_id='REQID_DFP', request_type='get_action_traces', listen=True, irreversible_only=False, fetch=True, with_progress=0)
+if __name__ == "__main__":
+    d.run(
+        data=data,
+        request_id="REQID_DFP",
+        request_type="get_action_traces",
+        listen=True,
+        irreversible_only=False,
+        fetch=True,
+        with_progress=0,
+    )
