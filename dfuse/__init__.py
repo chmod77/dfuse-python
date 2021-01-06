@@ -10,3 +10,5 @@ __license__ = "MIT License"
 
 from .eosio import Eosio
 from .eth import Eth
+
+__all__ = ["Eosio", "Eth"]
