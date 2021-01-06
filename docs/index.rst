@@ -6,10 +6,6 @@
 Welcome to Dfuse Python's documentation!
 ========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
 .. automodule:: dfuse
     :members:
 
