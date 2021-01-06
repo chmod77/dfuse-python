@@ -19,9 +19,9 @@ class DfuseWs:
 
         `req_id`	string	optional	An ID to associate responses back with the request
 
-        `start_block`	number (integer)	optional	Block at which you want to start processing. 
+        `start_block`	number (integer)	optional	Block at which you want to start processing.
 
-                        It can be an absolute block number, or a negative value, meaning how many blocks from the current head block on the chain. 
+                        It can be an absolute block number, or a negative value, meaning how many blocks from the current head block on the chain.
 
                         Ex: -2500 means 2500 blocks in the past, relative to the head block. 0 means the beginning of the chain.
 
@@ -32,17 +32,17 @@ class DfuseWs:
 
         `listen`	boolean	optional, defaults to false	Whether to start listening on changes to the requested entity.
 
-        `with_progress`	number (integer)	optional	Frequency of the progress of blocks processing (within the scope of a req_id). 
+        `with_progress`	number (integer)	optional	Frequency of the progress of blocks processing (within the scope of a req_id).
 
     The Request Types are as follows:
 
         `get_action_traces` - Retrieves a stream of actions, filtered by `receiver` and `account`.
 
-                            - Actions on the EOS blockchain are identified by a triplet `receiver`/`account`/`action_name` * 
+                            - Actions on the EOS blockchain are identified by a triplet `receiver`/`account`/`action_name` *
 
-                            - The `code` on the `receiver` is called with the method `account`/`action_name` * 
+                            - The `code` on the `receiver` is called with the method `account`/`action_name` *
 
-                            - An `action` is considered a “notification” when the `receiver` is different from the `account` field. 
+                            - An `action` is considered a “notification” when the `receiver` is different from the `account` field.
 
                             - That `receiver` may or may not contain instructions to run for that `account`/`action_name` pair.
 

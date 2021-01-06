@@ -9,7 +9,7 @@ from typing import Any
 DB_NAME: str = "dfusepy.sqlite3"
 
 CREATE_TBL_SQL = """
-                CREATE TABLE IF NOT EXISTS tokens (token TEXT, 
+                CREATE TABLE IF NOT EXISTS tokens (token TEXT,
                 created TIMESTAMP)
                 """
 
@@ -32,7 +32,7 @@ class DfusePersist:
         try:
             conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES)
             return conn
-        except Error as error:
+        except Error:
             return None
 
     def create_table(self, conn, sql: str = CREATE_TBL_SQL) -> Any:
@@ -47,7 +47,7 @@ class DfusePersist:
         try:
             c = conn.cursor()
             c.execute(sql)
-        except Error as error:
+        except Error:
             ...
         return None
         # finally:

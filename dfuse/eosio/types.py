@@ -7,7 +7,7 @@ from typing import List
 
 class Name:
     """
-    An Name is a string that represents a uint64 value, name-encoded using the base32 algorithm. 
+    An Name is a string that represents a uint64 value, name-encoded using the base32 algorithm.
 
     It can only include characters a through z and/or numbers from 1 to 5, and the dot . character. It has a maximum length of 12 or 13 characters (depending on the contents).
 
@@ -23,7 +23,7 @@ class AccountName(Name):
 
 
 class ActionName(Name):
-    """    
+    """
     An ActionName is a Name-encoded string that represents a contract’s action.
     """
 
@@ -31,7 +31,7 @@ class ActionName(Name):
 
 
 class PermissionName(Name):
-    """    
+    """
     A PermissionName is a Name-encoded string that represents a valid permission on the chain.
     """
 
@@ -56,16 +56,16 @@ class PublicKey:
 
 class AuthTokenType:
     """
-        AuthTokenType
-        Example payload:
+    AuthTokenType
+    Example payload:
 
-        {
-        "token": "eyJhbGciOiJ...",
-        "expires_at": 1550692172
-        }
-        Name	Type	Description
-        token	string	The JWT to be used with all API calls, including WebSocket.
-        expires_at	timestamp	An UNIX timestamp (UTC) indicating when the JWT will expire.
+    {
+    "token": "eyJhbGciOiJ...",
+    "expires_at": 1550692172
+    }
+    Name	Type	Description
+    token	string	The JWT to be used with all API calls, including WebSocket.
+    expires_at	timestamp	An UNIX timestamp (UTC) indicating when the JWT will expire.
     """
 
     def __init__(self, token: str, expires_at: datetime.datetime, **kwargs):
