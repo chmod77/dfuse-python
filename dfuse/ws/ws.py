@@ -60,8 +60,8 @@ class DfuseWs:
     def __init__(self, base_wss_url: str = URL):
         self.wss_url = base_wss_url
 
-    @asyncio.coroutine
-    def get(
+    # @asyncio.coroutine
+    async def get(
         self,
         token,
         data: dict,
@@ -74,7 +74,7 @@ class DfuseWs:
         origin: str = "DFUSE-PY",
     ):
 
-        websocket = yield from websockets.connect(
+        websocket = await websockets.connect(
             f"{self.wss_url}?token={token}", origin=origin
         )
 
@@ -88,13 +88,13 @@ class DfuseWs:
                 "data": data,
             }
 
-            yield from websocket.send(json.dumps(payload))
+            await websocket.send(json.dumps(payload))
             while True:
-                response = yield from websocket.recv()
+                response = await websocket.recv()
                 print(f"{response}")
 
         finally:
-            yield from websocket.close()
+            await websocket.close()
 
     def run(
         self,
