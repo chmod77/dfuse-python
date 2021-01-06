@@ -36,7 +36,31 @@ Dfuse EOSIO Implementation
 
 class Eosio:
     """
-    EOSIO
+    The Base Dfuse EOSIO class.
+
+    This class avails all the Dfuse API interactions and returns 
+    
+    appropriate responses for each request.
+
+
+     Attributes:
+        api_key: The Dfuse API Key needed to authenticate requests
+        base_url: The DFUSE endpoint
+        request_timeout: The configured timeout for requests
+        cache_filename: Filename for the cache file
+        token: Authorization token
+        block_time_url: URL to fetch block times
+        trx_url: URL to fetch Transactions
+        abi_url: URL to fetch ABI
+        abi_2_bin_url: URL to fetch ABI
+        key_accounts_url: URL to fetch Key Accounts
+        get_table_url: URL to fetch Tables
+        permission_links_url: URL to fetch Permission links
+        table_scopes_url: URL to fetch Table Scopes
+        get_table_accounts_url: URL to get table accounts
+        get_table_account_scopes_url: URL to get table account scopes
+        cache_name: Name of cache file
+
     """
 
     _session = None
@@ -87,7 +111,8 @@ class Eosio:
         self.__get_auth_token()
 
     @property
-    def session(self) -> Any:
+    def session(self) -> requests_cache.CachedSession:
+        """Dfuse API Cached Session property"""
         if not self._session:
             self._session = requests_cache.CachedSession(
                 cache_name=self.cache_name, backend="sqlite", expire_after=120
@@ -95,7 +120,7 @@ class Eosio:
             self._session.headers.update({"Content-Type": "application/json"})
             self._session.headers.update(
                 {
-                    "User-agent": "dfusepython - python wrapper around \
+                    "User-agent": "dfuse-python - python wrapper around \
                                             dfuse.io"
                 }
             )
@@ -143,7 +168,16 @@ class Eosio:
             return ex
         return response
 
-    def save_token_to_db(self, data):
+    def save_token_to_db(self, data) -> bool:
+        """Saves token to Database
+
+        Connects to dabase, deletes all entries, creates new table 
+
+        and inserts token
+
+        :param data: Payload to be inserted to database
+        :return bool
+        """
         conn = persist.create_connection()
         if conn is not None:
             # Delete any present entry
@@ -156,9 +190,16 @@ class Eosio:
         return True
 
     def is_expired(self, time_, offset_) -> bool:
+        """Checks if token time is expired
+
+        :param time_
+        :param offset_
+
+        :return bool
+        """
         return (((offset_ - time_).total_seconds()) // 3600) > 22
 
-    def __get_auth_token(self):
+    def __get_auth_token(self) -> str:
         """
         Obtains a short term (24HRS) token
 
@@ -205,7 +246,7 @@ class Eosio:
             return self.token
         return self.token
 
-    def call(self):
+    def call(self) -> str:
         return "EOSIO"
 
     def get_block_at_timestamp(
@@ -222,7 +263,11 @@ class Eosio:
         Defaults to 1 day earlier, if no `time` is supplied, i.e
         `datetime.datetime.now() - datetime.timedelta(1)`.
 
-        Response:
+        :param time
+        
+        :param comparator
+
+        :return BlockTimeStampType:
         ```
         {
             "block": {
@@ -246,10 +291,9 @@ class Eosio:
         return response
 
     def get_transaction_lifecycle(self, id: str) -> TransactionLifecycle:
-        """
-        (Beta) GET /v0/transactions/:id: Fetching the transaction lifecycle associated with the provided path parameter :id.
+        """Fetches the transaction lifecycle associated with the provided path parameter :id.
 
-        Fetching the transaction lifecycle associated with the provided path parameter :id.
+        (Beta) GET /v0/transactions/:id Fetching the transaction lifecycle associated with the provided path parameter :id.
 
 
         This method returns transaction information regardless of the actual lifecycle state be it deferred, executed, failed or cancelled.
@@ -257,6 +301,11 @@ class Eosio:
         This means that deferred transactions are handled by this method, via a transaction with a delay_sec argument pushed to the chain or created by a smart contract.
 
         https://mainnet.eos.dfuse.io/v0/transactions/1d5f57e9392d045ef4d1d19e6976803f06741e11089855b94efcdb42a1a41253
+
+
+        :param id: The ID of the transaction to fetch
+
+        :return TransactionLifecycle or DfuseError
 
         """
         headers: dict = {"Authorization": f"Bearer {self.token}"}
@@ -271,7 +320,8 @@ class Eosio:
     def fetch_abi(
         self, account: str, block_num: int = None, json: str = "true"
     ) -> ABIType:
-        """
+        """Fetches the ABI for a given contract account, at any block height
+
         (Beta) GET /v0/state/abi: Fetch the ABI for a given contract account, at any block height.
 
         https://mainnet.eos.dfuse.io/v0/state/abi?account=eosio&json=true
@@ -280,7 +330,13 @@ class Eosio:
 
         If the requested block_num is irreversible, you will get an immutable ABI. If the ABI has changed while still in a reversible chain, you will get this new ABI, but it is not guaranteed to be the view that will pass irreversibility. Inspect the returned block_num parameter of the response to understand from which longest chain the returned ABI is from.
 
-        The returned ABI is the one that was active at the block_num requested
+        The returned ABI is the one that was active at the block_num requested.
+
+        :param account
+        :param block_num
+        :param json
+
+        :return ABIType or DfuseError
         """
         headers: dict = {"Authorization": f"Bearer {self.token}"}
         r = requests.get(
