@@ -1,4 +1,4 @@
-class Eth():
+class Eth:
     def __init__(self) -> None:
         """
         ETH
@@ -6,4 +6,4 @@ class Eth():
         ...
 
     def call(self):
-        return 'Hello ETH'
+        return "Hello ETH"

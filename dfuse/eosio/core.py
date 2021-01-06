@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
-from dfuse.ws.ws import dws
 import json
 import os
 import sqlite3
@@ -13,21 +12,14 @@ from urllib.parse import urlencode
 import requests
 import requests_cache
 from decouple import config
-from dfuse.eosio.types import (
-    ABIType,
-    AuthTokenType,
-    Bin2JSONType,
-    BlockTimeStampType,
-    DfuseError,
-    KeyAccountsType,
-    MultiStateType,
-    PermissionLinkType,
-    StateTableRowType,
-    StateType,
-    TableScopeType,
-    TransactionLifecycle,
-)
+
+from dfuse.eosio.types import (ABIType, AuthTokenType, Bin2JSONType,
+                               BlockTimeStampType, DfuseError, KeyAccountsType,
+                               MultiStateType, PermissionLinkType,
+                               StateTableRowType, StateType, TableScopeType,
+                               TransactionLifecycle)
 from dfuse.utils.db import persist
+from dfuse.ws.ws import dws
 
 """
 Dfuse EOSIO Implementation
@@ -38,8 +30,8 @@ class Eosio:
     """
     The Base Dfuse EOSIO class.
 
-    This class avails all the Dfuse API interactions and returns 
-    
+    This class avails all the Dfuse API interactions and returns
+
     appropriate responses for each request.
 
 
@@ -171,7 +163,7 @@ class Eosio:
     def save_token_to_db(self, data) -> bool:
         """Saves token to Database
 
-        Connects to dabase, deletes all entries, creates new table 
+        Connects to dabase, deletes all entries, creates new table
 
         and inserts token
 
@@ -264,7 +256,7 @@ class Eosio:
         `datetime.datetime.now() - datetime.timedelta(1)`.
 
         :param time
-        
+
         :param comparator
 
         :return BlockTimeStampType:

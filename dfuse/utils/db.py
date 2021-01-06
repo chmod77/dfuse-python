@@ -24,10 +24,10 @@ class DfusePersist:
     """
 
     def create_connection(self, db_file=DB_NAME) -> Any:
-        """ create a database connection to a SQLite database
+        """create a database connection to a SQLite database
 
         :param db_file: Name of database file to create
-        
+
         """
         try:
             conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES)
@@ -90,7 +90,7 @@ class DfusePersist:
         Query all rows in the token table
 
         :param conn: the Connection object
-        
+
         :return: list of token elements
         """
 
