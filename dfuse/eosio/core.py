@@ -10,20 +10,11 @@ import requests
 import requests_cache
 from decouple import config
 
-from dfuse.eosio.types import (
-    ABIType,
-    AuthTokenType,
-    Bin2JSONType,
-    BlockTimeStampType,
-    DfuseError,
-    KeyAccountsType,
-    MultiStateType,
-    PermissionLinkType,
-    StateTableRowType,
-    StateType,
-    TableScopeType,
-    TransactionLifecycle,
-)
+from dfuse.eosio.types import (ABIType, AuthTokenType, Bin2JSONType,
+                               BlockTimeStampType, DfuseError, KeyAccountsType,
+                               MultiStateType, PermissionLinkType,
+                               StateTableRowType, StateType, TableScopeType,
+                               TransactionLifecycle)
 from dfuse.utils.db import persist
 from dfuse.ws.ws import dws
 

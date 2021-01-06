@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from codecs import open
-
 # To use a consistent encoding
 from os import path
 
