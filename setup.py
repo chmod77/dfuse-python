@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from codecs import open
+
 # To use a consistent encoding
 from os import path
 
-from setuptools import find_packages, setup
+from setuptools import find_packages
 
 # Always prefer setuptools over distutils
 try:
