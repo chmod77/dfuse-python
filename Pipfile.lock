@@ -198,11 +198,13 @@
         },
         "urllib3": {
             "hashes": [
+
                 "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80",
                 "sha256:de3eedaad74a2683334e282005cd8d7f22f4d55fa690a2a1020a416cb0a47e73"
             ],
             "index": "pypi",
             "version": "==1.26.3"
+
         },
         "websockets": {
             "hashes": [
@@ -315,6 +317,7 @@
         },
         "lazy-object-proxy": {
             "hashes": [
+
                 "sha256:1d33d6f789697f401b75ce08e73b1de567b947740f768376631079290118ad39",
                 "sha256:2f2de8f8ac0be3e40d17730e0600619d35c78c13a099ea91ef7fb4ad944ce694",
                 "sha256:3782931963dc89e0e9a0ae4348b44762e868ea280e4f8c233b537852a8996ab9",
@@ -341,6 +344,7 @@
                 "sha256:fa7fb7973c622b9e725bee1db569d2c2ee64d2f9a089201c5e8185d482c7352d"
             ],
             "version": "==1.5.2"
+
         },
         "mccabe": {
             "hashes": [
@@ -387,10 +391,12 @@
         },
         "prompt-toolkit": {
             "hashes": [
+
                 "sha256:4cea7d09e46723885cb8bc54678175453e5071e9449821dce6f017b1d1fbfc1a",
                 "sha256:9397a7162cf45449147ad6042fa37983a081b8a73363a5253dd4072666333137"
             ],
             "version": "==3.0.17"
+
         },
         "ptyprocess": {
             "hashes": [
@@ -408,10 +414,12 @@
         },
         "pygments": {
             "hashes": [
+
                 "sha256:2656e1a6edcdabf4275f9a3640db59fd5de107d88e8663c5d4e9a0fa62f77f94",
                 "sha256:534ef71d539ae97d4c3a4cf7d6f110f214b0e687e92f9cb9d2a3b0d3101289c8"
             ],
             "version": "==2.8.1"
+
         },
         "pylint": {
             "hashes": [
